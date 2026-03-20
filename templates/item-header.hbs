@@ -1,0 +1,18 @@
+<header class="sheet-header">
+    {{!-- Partie haute : Image et Nom --}}
+    <div class="header-main">
+        <img class="profile-img" src="{{item.img}}" data-action="editImage" data-edit="img" title="{{item.name}}" height="80" width="80"/>
+        <h1 class="charname">
+            <input name="name" type="text" value="{{item.name}}" placeholder="Nom de l'item"/>
+        </h1>
+    </div>
+
+    {{!-- ONGLETS DYNAMIQUES --}}
+    <nav class="sheet-tabs tabs" data-group="primary" style="display: flex; flex-direction: row; justify-content: center; flex-wrap: wrap; gap: 10px; border-bottom: transparent; border-top: transparent;">
+        {{#each tabs.primary.tabs as |tab|}}
+        <a class="item {{tab.cssClass}} nav-btn" data-tab="{{tab.id}}" data-group="primary" data-action="setTab" style="margin-bottom: 0; padding-left: 0; justify-content: center;">
+            {{tab.label}}
+        </a>
+        {{/each}}
+    </nav>
+</header>

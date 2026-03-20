@@ -1,0 +1,8 @@
+{{!-- Fichier : templates/actor-nav.hbs --}}
+<nav class="sheet-tabs tabs" data-group="primary" style="display: flex; flex-direction: column; width: 180px; flex-shrink: 0;">
+  {{#each tabs.primary.tabs as |tab|}}
+  <a class="item {{tab.cssClass}} nav-btn" data-tab="{{tab.id}}" data-group="primary" data-action="setTab">
+      <i class="{{tab.icon}}"></i> {{tab.label}}
+  </a>
+  {{/each}}
+</nav>

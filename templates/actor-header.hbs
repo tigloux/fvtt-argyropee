@@ -1,0 +1,80 @@
+<div>
+  <header class="sheet-header sheet-header-layout">
+  
+    {{!-- COLONNE GAUCHE : Portrait avec Cadre Ovale --}}
+    <div class="portrait-wrapper">
+        <img class="portrait-img" src="{{actor.img}}" data-action="editImage" title="Modifier le portrait" />
+        <div class="portrait-frame"></div>
+    </div>
+    
+    {{!-- COLONNE DROITE : Informations vitales --}}
+    <div class="header-info">
+      
+      {{!-- Ligne 1 : Nom & Métier Actif --}}
+      <div class="header-row-top">
+        
+        <div style="flex: 2;">
+          <label class="header-label">Nom</label>
+          <input class="header-name-input" style="background: rgba(0, 0, 0, 0); border-bottom: 0; color: #3b78b6" name="name" type="text" value="{{actor.name}}" placeholder="Nom du personnage" />
+        </div>
+
+        <div style="flex: 1; text-align: right;">
+          <label class="header-label">Métier Actif</label>
+          {{#if activeMetier}}
+            <div class="header-job-value">{{activeMetier.name}}</div>
+          {{else}}
+            <div class="header-job-none">Aucun (Vagabond)</div>
+          {{/if}}
+        </div>
+
+      </div>
+
+      {{!-- Ligne 2 : Blocs de Stats (Panache, Init, Santé) --}}
+      <div class="header-stats-row">
+        
+        {{!-- Bloc Panache --}}
+        <div class="stat-group">
+          <div class="stat-box">
+            <input class="stat-input" name="system.panache.value" type="number" value="{{system.panache.value}}" />
+            <div class="stat-label">Panache</div>
+          </div>
+          <div class="stat-separator">-</div>
+          <div class="stat-box">
+            <input class="stat-input" name="system.panache.bonusPermanent" type="number" value="{{system.panache.bonusPermanent}}" />
+            <div class="stat-label" style="font-size: 1em;">Permanent</div>
+          </div>
+        </div>
+
+        {{!-- Bloc Initiative --}}
+        <div class="stat-group">
+          <div class="stat-box large">
+            <input class="stat-input" type="number" value="{{system.initiativeFinale}}" readonly />
+            <a class="stat-label interactive" data-action="rollInitiative" title="Lancer l'Initiative">
+              <i class="fas fa-dice"></i> Initiative
+            </a>
+          </div>
+        </div>
+
+        {{!-- Bloc Santé --}}
+        <div class="stat-group" style="gap: 5px;">
+          <div class="stat-box">
+            <input class="stat-input" type="number" value="{{system.santeMax}}" readonly />
+            <div class="stat-label">PS Max</div>
+          </div>
+          <div class="stat-separator">-</div>
+          <div class="stat-box">
+            <input class="stat-input" name="system.sante.value" type="number" value="{{system.sante.value}}" />
+            <div class="stat-label">Actuels</div>
+          </div>
+          <div class="stat-separator">+</div>
+          <div class="stat-box temp">
+            <input class="stat-input temp" name="system.sante.temp" type="number" value="{{system.sante.temp}}" />
+            <div class="stat-label temp">Temp.</div>
+          </div>
+          <a class="rest-btn" data-action="rest" title="Prendre du repos"><i class="fas fa-bed"></i></a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+</div>

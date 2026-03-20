@@ -1,0 +1,43 @@
+{
+  "id": "argyropee",
+  "title": "Argyropée",
+  "description": "Système pour le jeu de rôle Argyropée.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "11",
+    "verified": "13"
+  },
+  "authors": [
+    { "name": "Tigilou" }
+  ],
+  "esmodules": ["module/argyropee.mjs"],
+  "styles": ["css/argyropee.css"],
+  "documentTypes" : {
+    "Actor": {
+      "character": {},
+      "npc": {},
+      "monster": {}
+    },
+    "Item": {
+      "citoyennete": {},
+      "metier": {},
+      "arme": {},
+      "armure": {},
+      "sort": {},
+      "consommable": {},
+      "piege": {},
+      "munition": {},
+      "maladie": {}
+    }
+  },
+  "packs": [],
+  "socket": true,
+  "initiative": "1d10 - 1",
+  "grid": {
+    "distance": 1,
+    "units": "m"
+  },
+
+  "manifest": "https://raw.githubusercontent.com/tigloux/argyropee/main/system.json",
+  "download": "https://github.com/tigloux/argyropee/releases/download/v1.0.0/argyropee.zip"
+}

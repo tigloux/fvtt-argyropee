@@ -1,0 +1,94 @@
+<div class="item-content-wrapper" style="height: 100%; margin-top: 10px">
+    
+    {{!-- ONGLET 0 : DESCRIPTION --}}
+    <div class="tab {{#if (eq tab.id 'description')}}active{{/if}}" data-tab="description" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend><i class="fas fa-book-open"></i> Description de la munition</legend>
+                <div style="min-height: 150px; margin-top: 10px;">
+                    <prose-mirror name="system.description" data-document-uuid="{{item.uuid}}" value="{{system.description}}" toggled="true">
+                        {{{enrichedDescription}}}
+                    </prose-mirror>
+                </div>
+            </fieldset>
+        </section>
+    </div>
+
+    {{!-- ONGLET 1 : DÉTAILS --}}
+    <div class="tab {{#if (eq tab.id 'body')}}active{{/if}}" data-tab="body" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            
+            <fieldset class="item-fieldset">
+                <legend>Propriétés Balistiques</legend>
+                <div class="grid-fields">
+                    <div class="form-group">
+                        <label>Catégorie :</label>
+                        <select name="system.ammoType">
+                            {{selectOptions ammoCategories selected=system.ammoType localize=false}}
+                        </select>
+                    </div>
+                    <div class="form-group highlight">
+                        <label>Quantité en stock :</label>
+                        <input type="number" name="system.quantity" value="{{system.quantity}}" min="0">
+                    </div>
+                </div>
+
+                <div class="grid-fields" style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label>Bonus aux dégâts :</label>
+                        <input type="text" name="system.damageBonus" value="{{system.damageBonus}}" placeholder="ex: +1, ou +1d4">
+                    </div>
+                    <div class="form-group">
+                        <label>Risque de bris / perte (%) :</label>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <input type="number" name="system.breakageChance" value="{{system.breakageChance}}" min="0" max="100">
+                            <span style="font-weight: bold; color: wheat;">%</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="item-fieldset">
+                <legend>Informations diverses</legend>
+                <div class="grid-fields">
+                    <div class="form-group">
+                        <label>Poids unitaire (kg) :</label>
+                        <input type="number" step="0.01" name="system.weight" value="{{system.weight}}" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Prix unitaire (sous) :</label>
+                        <input type="number" name="system.price" value="{{system.price}}" min="0">
+                    </div>
+                </div>
+            </fieldset>
+
+        </section>
+    </div>
+
+    {{!-- ONGLET 2 : EFFETS --}}
+    <div class="tab {{#if (eq tab.id 'effects')}}active{{/if}}" data-tab="effects" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend>Effets (Flèches empoisonnées, etc.)</legend>
+                <div style="text-align: right; margin-bottom: 10px;">
+                    <a class="item-control" data-action="addEffect" style="background: rgba(245, 222, 179, 0.2); color: wheat; padding: 5px 10px; border-radius: 3px; font-size: 0.9em; cursor: pointer; border: 1px solid wheat;"><i class="fas fa-plus"></i> Ajouter un Effet</a>
+                </div>
+                <ul class="items-list effects-list">
+                    {{#each effects as |effect|}}
+                    <li class="item effect flexrow" data-effect-id="{{effect.id}}">
+                        <div class="item-name flexrow" style="display: flex; flex: 3; align-items: center; gap: 10px;">
+                            <img src="{{effect.img}}" width="32" height="32" style="border: none; flex: 0 0 32px; object-fit: cover;" />
+                            <span style="font-weight: bold; {{#if effect.disabled}}text-decoration: line-through; color: #777;{{/if}}">{{effect.name}}</span>
+                        </div>
+                        <div class="item-controls" style="font-size: 1.2em;">
+                            <a class="item-control" data-action="toggleEffect" style="color: {{#if effect.disabled}}#777{{else}}wheat{{/if}};"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                            <a class="item-control" data-action="editEffect" style="margin: 0 10px;"><i class="fas fa-edit"></i></a>
+                            <a class="item-control" data-action="deleteEffect" style="color: #ff6b6b;"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </fieldset>
+        </section>
+    </div>
+</div>

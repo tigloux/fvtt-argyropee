@@ -1,0 +1,29 @@
+<div class="tab {{tab.cssClass}}" data-tab="effects" data-group="primary">
+    <ol class="items-list effects-list" style="list-style: none; padding: 0;">
+        <li class="item effects-header flexrow" style="font-weight: bold; border-bottom: 1px solid #000; margin-bottom: 5px; display: flex; justify-content: space-between;">
+            <div class="item-name">Effets Actifs</div>
+            <div class="item-controls">
+                <a class="effect-control" data-action="create" title="Ajouter un effet">
+                    <i class="fas fa-plus"></i> Ajouter
+                </a>
+            </div>
+        </li>
+
+        {{#each effects as |effect|}}
+        <li class="item effect flexrow" data-effect-id="{{effect.id}}" style="display: flex; align-items: center; justify-content: space-between; padding: 5px; border-bottom: 1px solid #ccc;">
+            <div class="item-name flexrow" style="display: flex; align-items: center; gap: 10px;">
+                <img src="{{effect.img}}" width="24" height="24"/>
+                <span>{{effect.name}}</span>
+            </div>
+            <div class="item-controls">
+                <a class="effect-control" data-action="edit" title="Modifier">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <a class="effect-control" data-action="delete" title="Supprimer">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
+        </li>
+        {{/each}}
+    </ol>
+</div>

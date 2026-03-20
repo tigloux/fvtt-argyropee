@@ -1,0 +1,114 @@
+<div class="item-content-wrapper" style="height: 100%; margin-top: 10px">
+    
+    {{!-- ONGLET 0 : DESCRIPTION --}}
+    <div class="tab {{#if (eq tab.id 'description')}}active{{/if}}" data-tab="description" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend><i class="fas fa-book-open"></i> Description de l'arme</legend>
+                <div style="min-height: 150px; margin-top: 10px;">
+                    <prose-mirror name="system.description" data-document-uuid="{{item.uuid}}" value="{{system.description}}" toggled="true">
+                        {{{enrichedDescription}}}
+                    </prose-mirror>
+                </div>
+            </fieldset>
+        </section>
+    </div>
+
+    {{!-- ONGLET 1 : DÉTAILS --}}
+    <div class="tab {{#if (eq tab.id 'body')}}active{{/if}}" data-tab="body" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            
+            <fieldset class="item-fieldset">
+                <legend>Caractéristiques Martiales</legend>
+                <div class="grid-fields">
+                    <div class="form-group">
+                        <label>Catégorie d'arme :</label>
+                        <select name="system.weaponType">
+                            {{selectOptions weaponTypes selected=system.weaponType localize=false}}
+                        </select>
+                    </div>
+                    <div class="form-group highlight" style="background: rgba(139, 0, 0, 0.2); border-color: darkred;">
+                        <label style="color: #ffcccc;">Compétence d'attaque :</label>
+                        <select name="system.associatedSkill" style="border-color: darkred; color: white;">
+                            {{selectOptions combatSkills selected=system.associatedSkill localize=false}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-fields">
+                    <div class="form-group">
+                        <label>Dégâts :</label>
+                        <input type="text" name="system.damage" value="{{system.damage}}" placeholder="ex: 1d6+1">
+                    </div>
+                    <div class="form-group">
+                        <label>Portée (mètres) :</label>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <input type="number" name="system.range" value="{{system.range}}" min="0" style="width: 60px;">
+                            <span style="font-size: 0.85em; color: wheat; font-style: italic;">(0 = Corps à corps)</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="item-fieldset">
+                <legend>Munitions</legend>
+                <div class="form-group row">
+                    <label>Nécessite des munitions :</label>
+                    <input type="checkbox" name="system.consumeAmmo" {{checked system.consumeAmmo}}>
+                </div>
+                {{#if system.consumeAmmo}}
+                <div class="form-group" style="margin-top: 10px;">
+                    <label>Type de munition requis :</label>
+                    <input type="text" name="system.ammoType" value="{{system.ammoType}}" placeholder="ex: Flèches, Balles en plomb...">
+                </div>
+                {{/if}}
+            </fieldset>
+
+            <fieldset class="item-fieldset">
+                <legend>Informations diverses</legend>
+                <div class="grid-fields">
+                    <div class="form-group highlight">
+                        <label>Quantité :</label>
+                        <input type="number" name="system.quantity" value="{{system.quantity}}" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Poids unitaire (kg) :</label>
+                        <input type="number" step="0.1" name="system.weight" value="{{system.weight}}" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Prix unitaire (sous) :</label>
+                        <input type="number" name="system.price" value="{{system.price}}" min="0">
+                    </div>
+                </div>
+            </fieldset>
+
+        </section>
+    </div>
+
+    {{!-- ONGLET 2 : EFFETS --}}
+    <div class="tab {{#if (eq tab.id 'effects')}}active{{/if}}" data-tab="effects" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend>Effets magiques ou mécaniques</legend>
+                <div style="text-align: right; margin-bottom: 10px;">
+                    <a class="item-control" data-action="addEffect" style="background: rgba(245, 222, 179, 0.2); color: wheat; padding: 5px 10px; border-radius: 3px; font-size: 0.9em; cursor: pointer; border: 1px solid wheat;"><i class="fas fa-plus"></i> Ajouter un Effet</a>
+                </div>
+                <ul class="items-list effects-list">
+                    {{#each effects as |effect|}}
+                    <li class="item effect flexrow" data-effect-id="{{effect.id}}">
+                        <div class="item-name flexrow" style="display: flex; flex: 3; align-items: center; gap: 10px;">
+                            <img src="{{effect.img}}" width="32" height="32" style="border: none; flex: 0 0 32px; object-fit: cover;" />
+                            <span style="font-weight: bold; {{#if effect.disabled}}text-decoration: line-through; color: #777;{{/if}}">{{effect.name}}</span>
+                        </div>
+                        <div class="item-controls" style="font-size: 1.2em;">
+                            <a class="item-control" data-action="toggleEffect" style="color: {{#if effect.disabled}}#777{{else}}wheat{{/if}};"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                            <a class="item-control" data-action="editEffect" style="margin: 0 10px;"><i class="fas fa-edit"></i></a>
+                            <a class="item-control" data-action="deleteEffect" style="color: #ff6b6b;"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </fieldset>
+        </section>
+    </div>
+</div>

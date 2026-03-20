@@ -1,0 +1,84 @@
+<div class="item-content-wrapper" style="height: 100%; margin-top: 10px">
+    
+    {{!-- ONGLET 0 : DESCRIPTION --}}
+    <div class="tab {{#if (eq tab.id 'description')}}active{{/if}}" data-tab="description" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend><i class="fas fa-book-open"></i> Symptômes et Description</legend>
+                <div style="min-height: 150px; margin-top: 10px;">
+                    <prose-mirror name="system.description" data-document-uuid="{{item.uuid}}" value="{{system.description}}" toggled="true">
+                        {{{enrichedDescription}}}
+                    </prose-mirror>
+                </div>
+            </fieldset>
+        </section>
+    </div>
+
+    {{!-- ONGLET 1 : DÉTAILS --}}
+    <div class="tab {{#if (eq tab.id 'body')}}active{{/if}}" data-tab="body" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend>Nature de l'Affliction</legend>
+                <div class="grid-fields">
+                    <div class="form-group">
+                        <label>Origine :</label>
+                        <select name="system.origin">
+                            {{selectOptions origins selected=system.origin localize=false}}
+                        </select>
+                    </div>
+                    <div class="form-group row highlight" style="justify-content: center;">
+                        <label style="color: darkred;">Incurable (Nécessite Remède) :</label>
+                        <input type="checkbox" name="system.remedyRequired" {{checked system.remedyRequired}}>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Traitement / Remède :</label>
+                    <input type="text" name="system.treatment" value="{{system.treatment}}" placeholder="Ex: Essence de salmycètes, ou repos...">
+                </div>
+            </fieldset>
+
+            <fieldset class="item-fieldset">
+                <legend>Progression / Guérison</legend>
+                <div class="grid-fields" style="display: flex; justify-content: space-around; align-items: center;">
+                    <div class="form-group" style="text-align: center;">
+                        <label>Succès requis</label>
+                        <input type="number" name="system.testsRequired" value="{{system.testsRequired}}" min="1" style="width: 60px; text-align: center; font-size: 1.2em; margin: 5px auto;">
+                    </div>
+                    <div style="font-size: 2em; color: #555;">/</div>
+                    <div class="form-group highlight" style="text-align: center; background: rgba(0, 100, 0, 0.1); border-color: darkgreen;">
+                        <label style="color: darkgreen;">Succès actuels</label>
+                        <input type="number" name="system.testsPassed" value="{{system.testsPassed}}" min="0" style="width: 60px; text-align: center; font-size: 1.2em; color: darkgreen; margin: 5px auto;">
+                    </div>
+                </div>
+            </fieldset>
+        </section>
+    </div>
+
+    {{!-- ONGLET 2 : EFFETS --}}
+    <div class="tab {{#if (eq tab.id 'effects')}}active{{/if}}" data-tab="effects" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend>États et Malus infligés</legend>
+                <div style="text-align: right; margin-bottom: 10px;">
+                    <a class="item-control add-effect-btn" data-action="addEffect"><i class="fas fa-plus"></i> Ajouter un Effet</a>
+                </div>
+                <ul class="items-list effects-list">
+                    {{#each effects as |effect|}}
+                    <li class="item effect flexrow" data-effect-id="{{effect.id}}">
+                        <div class="item-name flexrow" style="display: flex; flex: 3; align-items: center; gap: 10px;">
+                            <img src="{{effect.img}}" width="32" height="32" style="border: none; flex: 0 0 32px; object-fit: cover;"/>
+                            <span style="font-weight: bold; {{#if effect.disabled}}text-decoration: line-through; color: #777;{{/if}}">{{effect.name}}</span>
+                        </div>
+                        <div class="item-controls" style="font-size: 1.2em;">
+                            <a class="item-control" data-action="toggleEffect" style="color: {{#if effect.disabled}}#777{{else}}inherit{{/if}};"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                            <a class="item-control" data-action="editEffect" style="margin: 0 10px;"><i class="fas fa-edit"></i></a>
+                            <a class="item-control" data-action="deleteEffect" style="color: #ff6b6b;"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </fieldset>
+        </section>
+    </div>
+
+</div>

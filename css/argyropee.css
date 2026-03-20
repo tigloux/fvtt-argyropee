@@ -1,0 +1,1946 @@
+@font-face {
+	font-family: "LinR";
+	src: url("./assets/fonts/LinLibertine_Re.ttf");
+}
+
+@font-face {
+	font-family: "LinB";
+	src: url("./assets/fonts/LinLibertine_Bd.ttf");
+}
+
+@font-face {
+	font-family: "High";
+	src: url("./assets/fonts/htowert.ttf");
+}
+
+@font-face {
+	font-family: "Renaiss";
+	src: url("./assets/fonts/Renaiss-Italic.ttf");
+}
+
+@font-face {
+	font-family: "Fineprint";
+	src: url("./assets/fonts/Fineprint.otf");
+}
+
+@font-face {
+	font-family: "Cinzel";
+	src: url("./assets/fonts/Cinzel-VariableFont_wght.ttf");
+}
+
+/* ========================================== */
+/* STYLE GLOBAL DE LA FENÊTRE ACTEUR         */
+/* ========================================== */
+
+/* 1. On cible la zone de contenu de Foundry QUI CONTIENT ta fiche */
+.argyropee.sheet.actor .window-content {
+    /* Nettoyage du fond gris classique de Foundry */
+    background: transparent;
+    box-shadow: none;
+    
+    /* --- FOND DE LA FICHE (Parchemin) --- */
+    background-image: url('./assets/styles/argyropee-styles-fondpage.webp');
+    background-repeat: repeat;
+    background-position: center top;
+    background-size: cover;
+    
+    /* --- BORDURE EN IMAGE --- */
+    border: 20px solid transparent; /* L'épaisseur de ton cadre physique */
+    border-image-source: url('./assets/styles/argyropee_asset_border-fiche-acteurB.webp');
+    border-image-slice: 100; /* Ajuste cette valeur selon la taille de ton image */
+    border-image-repeat: stretch; 
+    
+    /* Empêche le parchemin de baver sous le cadre */
+    background-clip: padding-box;
+    
+    /* Espace entre la bordure et ton contenu pour laisser respirer le texte */
+    padding: 10px; 
+}
+
+/* 2. Le formulaire ne gère plus que l'agencement (Flexbox) */
+/* Plus de fond, plus de bordure ici ! */
+form.argyropee.sheet.actor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden; 
+    box-sizing: border-box;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. Le conteneur du bas (Nav + Contenu) */
+.argyropee .sheet-main-layout {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    flex: 1; /* Prend toute la hauteur restante sous le header */
+    min-height: 0; /* LA MAGIE EST ICI : Autorise le conteneur à rétrécir pour forcer le scroll */
+    margin-top: 15px;
+}
+
+/* 3. La zone des onglets qui doit scroller */
+.argyropee.sheet.actor .sheet-body {
+    flex: 1;
+    overflow-y: auto; /* Active le scroll vertical */
+    padding-right: 10px;
+}
+
+/* 2. Style des champs de saisie (inputs) : fond transparent léger, pas de grosses bordures */
+.argyropee.sheet.actor input[type="text"],
+.argyropee.sheet.actor input[type="number"] {
+    background: rgba(0, 0, 0, 0.03); /* Couleur de la barre d'onglets */
+    border: none;
+    border-radius: 2px;
+    color: #000;
+    padding: 2px 5px;
+}
+
+.argyropee.sheet.actor input:focus {
+    box-shadow: none;
+    border-bottom: 2px solid #3b78b6; /* Rouge sombre au focus */
+}
+
+/* 3. Champs calculés automatiquement (PS Max, Initiative) */
+.argyropee.sheet.actor input[readonly] {
+    color: #000; /* Force la couleur noire (Foundry les met en gris par défaut) */
+    font-weight: bold;
+    background: transparent;
+    border: none;
+}
+
+/* ========================================== */
+/* STYLE GLOBAL DE LA FENÊTRE ITEM            */
+/* ========================================== */
+
+/* 1. Fond PAR DÉFAUT pour tous les objets (Consommables, Pièges...) */
+.argyropee.sheet.item .window-content {
+    background: transparent;
+    box-shadow: none;
+    background-image: url('./assets/styles/argyropee_asset_fond-fiche-item.webp');
+    background-repeat: repeat;
+    background-position: center top;
+    background-size: cover;
+    background-clip: padding-box;
+    padding: 10px; 
+}
+
+/* 2. L'EXCEPTION : Fond spécifique pour les ARMES et ARMURES */
+.argyropee.sheet.item.weapon .window-content,
+.argyropee.sheet.item.armor .window-content {
+    /* Mettez ici le chemin vers l'image que vous voulez pour les armes/armures */
+    background-image: url('./assets/styles/argyropee_asset_fond-fiche-item-weapon.webp'); 
+}
+
+/* 2. L'EXCEPTION BIS : Fond spécifique pour les ITEMS GÉNÉRAUX */
+.argyropee.sheet.item.citizenship .window-content,
+.argyropee.sheet.item.disease .window-content,
+.argyropee.sheet.item.profession .window-content,
+.argyropee.sheet.item.spell .window-content {
+    /* Mettez ici le chemin vers l'image que vous voulez pour les armes/armures */
+    background-image: url('./assets/styles/argyropee_asset_fond-journal.webp'); 
+}
+
+/* ========================================== */
+/* STRUCTURE INTERNE DES OBJETS (Le Design)   */
+/* ========================================== */
+
+/* Le Header (En-tête) */
+.argyropee.sheet.item .sheet-header {
+    display: block; 
+    background: rgba(0,0,0,0.15); 
+    border-bottom: 2px solid wheat; 
+    padding-bottom: 15px;
+    margin-bottom: 5px;
+    border-radius: 5px 5px 0 0;
+}
+
+.argyropee.sheet.item .header-main {
+    display: flex; gap: 15px; align-items: center; padding: 10px;
+}
+
+.argyropee.sheet.item .header-main img {
+    border: 0px solid wheat; 
+    border-radius: 5px;
+    margin-left: 15px;
+    background: rgba(0,0,0,0.3);
+}
+
+.argyropee.sheet.item .header-main input[name="name"] {
+    text-align: center; 
+    border: none; 
+    background: transparent; 
+    font-size: 1em; 
+    height: 1.2em; 
+    color: wheat; 
+    width: 100%; 
+    font-family: 'Renaiss', serif;
+}
+.argyropee.sheet.item .header-main input[name="name"]:focus {
+    border-bottom: 1px dashed wheat;
+}
+
+/* Les boîtes de contenu (Fieldsets façon "Item") */
+.argyropee.sheet.item .item-fieldset {
+    border: 1px solid wheat; 
+    border-radius: 5px; 
+    padding: 10px; 
+    margin-bottom: 15px;
+    background: rgba(0, 0, 0, 0.15); /* Assombrit le fond pour faire ressortir le texte blé/blanc */
+    color: white;
+}
+
+.argyropee.sheet.item .item-fieldset legend {
+    font-family: 'Renaiss', serif; 
+    font-size: 1.2em; 
+    font-weight: bold; 
+    padding: 0 8px; 
+    color: wheat;
+    border: none;
+}
+
+/* Grilles et formulaires (Inputs, Selects) */
+.argyropee.sheet.item .grid-fields {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+    margin-bottom: 10px;
+}
+
+.argyropee.sheet.item .form-group {
+    display: flex;
+    flex-direction: column; /* Place le label au-dessus de l'input */
+    justify-content: center;
+}
+
+.argyropee.sheet.item .form-group.row {
+    flex-direction: row; /* Place le label à côté de la case à cocher */
+    align-items: center;
+    gap: 10px;
+}
+
+.argyropee.sheet.item .form-group label {
+    font-weight: bold;
+    color: wheat;
+    font-size: 0.95em;
+}
+
+/* Style des champs de saisie pour les objets */
+.argyropee.sheet.item .form-group input[type="text"],
+.argyropee.sheet.item .form-group input[type="number"],
+.argyropee.sheet.item .form-group select {
+    background-color: rgba(255, 255, 255, 0.1); 
+    color: white;
+    border: 1px solid rgba(245, 222, 179, 0.3); /* wheat transparent */
+    border-radius: 3px;
+    padding: 4px;
+    margin-top: 5px;
+}
+
+.argyropee.sheet.item .form-group input:focus,
+.argyropee.sheet.item .form-group select:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: wheat;
+}
+
+/* Mise en évidence d'une valeur (ex: Quantité) */
+.argyropee.sheet.item .form-group.highlight {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px dashed rgba(245, 222, 179, 0.5);
+}
+.argyropee.sheet.item .form-group.highlight input {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Liste des effets dans les objets */
+.argyropee.sheet.item .effects-list .effect {
+    background: rgba(0,0,0,0.3); 
+    border: 1px solid rgba(245, 222, 179, 0.5); 
+    border-radius: 4px;
+    color: white;
+    padding: 5px 10px;
+}
+.argyropee.sheet.item .effects-list .item-control {
+    color: wheat;
+    transition: all 0.2s;
+}
+.argyropee.sheet.item .effects-list .item-control:hover {
+    color: white;
+    text-shadow: 0 0 5px wheat;
+}
+
+/* ---------------------------------------------------- */
+/* 2. THÈME "JOURNAL" (Pour les fonds clairs)           */
+/* S'applique à : Citoyenneté, Maladie, Métier, Sort, Arme et Armure    */
+/* ---------------------------------------------------- */
+
+/* On utilise :is() pour cibler ces 6 types d'objets d'un seul coup */
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .sheet-header {
+    background: rgba(0, 0, 0, 0.05);
+    border-bottom: 2px solid #192a51;
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .header-main img {
+    border-color: #192a51; 
+    background: rgba(0, 0, 0, 0.05);
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .header-main input[name="name"] {
+    color: #192a51; 
+    font-weight: bold;
+}
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .header-main input[name="name"]:focus {
+    border-bottom-color: #192a51;
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .item-fieldset {
+    border-color: #192a51; 
+    background: rgba(255, 255, 255, 0.4); 
+    color: #000;
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .item-fieldset legend {
+    color: #192a51;
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .form-group label {
+    color: #192a51; 
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .form-group input[type="text"],
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .form-group input[type="number"],
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .form-group select {
+    background-color: rgba(0, 0, 0, 0.03); 
+    color: #000;
+    border-color: rgba(25, 42, 81, 0.3); 
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .form-group input:focus,
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .form-group select:focus {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-color: #192a51;
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .form-group.highlight {
+    background: rgba(25, 42, 81, 0.08); 
+    border-color: rgba(25, 42, 81, 0.5);
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .effects-list .effect {
+    background: rgba(255, 255, 255, 0.6); 
+    border-color: rgba(25, 42, 81, 0.4); 
+    color: #000;
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .effects-list .item-control {
+    color: #555;
+}
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .effects-list .item-control:hover {
+    color: #192a51;
+    text-shadow: 0 0 5px rgba(25, 42, 81, 0.3);
+}
+
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .add-effect-btn {
+    background: rgba(25, 42, 81, 0.1);
+    color: #192a51;
+    border-color: #192a51;
+}
+:is(.argyropee.sheet.item.citizenship, .argyropee.sheet.item.disease, .argyropee.sheet.item.profession, .argyropee.sheet.item.spell, .argyropee.sheet.item.weapon, .argyropee.sheet.item.armor) .add-effect-btn:hover {
+    background: rgba(25, 42, 81, 0.2);
+}
+
+/* ========================================== */
+/* STYLE GRILLE DE COMPETENCES         */
+/* ========================================== */
+.competences-grid {
+    display: grid;
+    /* Crée des colonnes auto de minimum 250px, se répartissant l'espace */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.comp-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Style des cercles */
+.skill-dots {
+    display: flex;
+    gap: 3px;
+    white-space: nowrap;
+}
+
+.dot {
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid #cccdcf;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dot:hover {
+    background-color: rgba(74, 0, 0, 0.4);
+}
+
+/* Couleurs d'origine des compétences */
+.argyropee .sheet-body .dot.filled.base { background-color: #333; } /* Noir classique */
+.argyropee .sheet-body .dot.filled.metier { background-color: #00633d; } /* Vert émeraude */
+.argyropee .sheet-body .dot.filled.citoyennete { background-color: #5f0081; } /* Violet noble */
+.argyropee .sheet-body .dot.filled.temp { background-color: #d4af37; } /* Or / Magie */
+
+.argyropee.sheet .skill-dots .dot.filled.malus {
+    background-color: #8b0000; /* Rouge sombre */
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.8);
+    opacity: 0.6; /* Un peu transparent pour montrer que c'est désactivé */
+}
+
+/* Style du bouton de nom de compétence */
+.skill-roll-btn {
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: 16px;
+	color: #000;
+}
+
+.skill-roll-btn:hover {
+    color: #3b78b6;
+}
+
+/* Force la hauteur pour permettre le scroll interne */
+.argyropee.sheet.item .sheet-body,
+.argyropee.sheet.item .effects-list {
+    max-height: 350px; /* Ajustez selon la taille de votre fenêtre */
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* On s'assure que le scrollbar a un look sympa */
+.argyropee.sheet.item .sheet-body::-webkit-scrollbar,
+.argyropee.sheet.item .effects-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.argyropee.sheet.item .sheet-body::-webkit-scrollbar-thumb,
+.argyropee.sheet.item .effects-list::-webkit-scrollbar-thumb {
+    background: #4a0000;
+    border-radius: 3px;
+}
+
+/* Gestion des onglets : Force la disparition */
+.argyropee.sheet .tab[data-tab] {
+    display: none !important;
+}
+
+/* Force l'apparition uniquement si la classe active est présente */
+.argyropee.sheet .tab[data-tab].active {
+    display: block !important;
+}
+
+/* ========================================== */
+/* STYLE DE LA NAVIGATION (AVEC IMAGES WEBP)  */
+/* ========================================== */
+
+.argyropee.sheet.actor nav.sheet-tabs.tabs {
+	border: 0;
+	justify-content: start;
+	gap: 0;
+}
+/* 1. État normal du bouton (Image Inactive) ACTOR-SHEET */
+.argyropee.sheet.actor .nav-btn {
+	/* --- TAILLE FIXE ET CENTRAGE --- */
+    display: flex;
+	align-items: center;
+	width: 200px;
+	height: 60px;
+	box-sizing: border-box;
+    padding-left: 30px;
+    margin: 10px;
+	
+	/* --- TYPOGRAPHIE --- */
+    font-family: 'Renaiss', serif;
+    font-size: 1.2em;
+	color: black;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    
+    /* --- INTEGRATION DE L'IMAGE --- */
+    background-image: url('./assets/styles/argyropee_asset_button-inactive_nobg_tigilou.webp'); /* <-- Adapte le chemin */
+    background-size: 100% 100%; /* Force l'image à remplir tout le bouton */
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none; /* On enlève les bordures classiques */
+    box-shadow: none; /* On enlève l'ombre classique */
+}
+
+/* 1. État normal du bouton (Image Inactive) ITEM-SHEET */
+.argyropee.sheet.item .nav-btn {
+    /* --- TAILLE FIXE ET CENTRAGE --- */
+    display: flex;
+	align-items: center;
+	width: 150px;
+	height: 45px;
+	box-sizing: border-box;
+    padding-left: 30px;
+    margin-bottom: 15px;
+	
+	/* --- TYPOGRAPHIE --- */
+    font-family: 'Renaiss', serif;
+    font-size: 1em;
+    font-weight: bold;
+	color: black;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    
+    /* --- INTEGRATION DE L'IMAGE --- */
+    background-image: url('./assets/styles/argyropee_asset_button-inactive_nobg_tigilou.webp'); /* <-- Adapte le chemin */
+    background-size: 100% 100%; /* Force l'image à remplir tout le bouton */
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none; /* On enlève les bordures classiques */
+    box-shadow: none; /* On enlève l'ombre classique */
+}
+
+/* 2. Au survol de la souris (Hover) */
+.argyropee.sheet.actor .nav-btn:hover {
+    /* Magie CSS : On illumine l'image existante de 20% et on ajoute une ombre sous l'image */
+    filter: brightness(1.2) drop-shadow(2px 5px 5px rgba(0,0,0,0.3));
+    transform: translateY(-2px); /* Le bouton remonte légèrement vers la souris */
+    color: #27365f; /* Le texte devient blanc pur */
+}
+
+/* 3.a L'onglet ACTIF ACTOR-SHEET */
+.argyropee.sheet.actor .nav-btn.active {
+    background-image: url('./assets/styles/argyropee_asset_button-active_nobg_tigilou.webp'); /* <-- Adapte le chemin */
+    filter: none; /* On retire l'effet de survol s'il est actif */
+    transform: none; /* Il reste bien à plat */
+    
+    color: #bebebe; /* Exemple : le texte devient doré quand on est sur cet onglet */
+}
+/* 3.b L'onglet ACTIF ITEM-SHEET */
+.argyropee.sheet.item .nav-btn.active {
+    background-image: url('./assets/styles/argyropee_asset_button-active-gold.webp'); /* <-- Adapte le chemin */
+    filter: none; /* On retire l'effet de survol s'il est actif */
+    transform: none; /* Il reste bien à plat */
+    
+    color: #479ff7; /* Exemple : le texte devient doré quand on est sur cet onglet */
+}
+/* 4. Les icônes FontAwesome dans les boutons */
+.argyropee.sheet.actor .nav-btn i {
+    width: 25px;
+    text-align: center;
+    margin-right: 5px;
+    color: inherit;
+}
+
+/* ========================================== */
+/* STYLE DU PORTRAIT (OVALE & CADRE)          */
+/* ========================================== */
+
+/* Le conteneur principal */
+.argyropee.sheet.actor .portrait-wrapper {
+    position: relative;
+    width: 150px;
+    height: 210px;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+/* L'image du personnage */
+.argyropee.sheet.actor .portrait-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Permet à l'image de remplir la zone sans s'écraser */
+    border-radius: 50%; /* MAGIE : Sur un rectangle, 50% crée un ovale parfait ! */
+    cursor: pointer; /* Indique qu'on peut cliquer pour changer l'image */
+    border: none;
+	padding: 18px;
+}
+
+/* L'image du cadre spécifique aux monstres */
+.argyropee.sheet.actor .portrait-frame.monster-frame {
+	/* Remplacez le nom du fichier par votre véritable image de cadre de monstre */
+	background-image: url('./assets/styles/argyropee_asset_border-portrait-monstre.webp'); 
+}
+.argyropee.sheet.actor .portrait-frame.monster-frame .portrait-img {
+	padding: 20px;
+}
+/* L'image du cadre superposée */
+.argyropee.sheet.actor .portrait-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Remplace par le chemin vers ton image de cadre (WEBP ou PNG avec transparence au centre) */
+    background-image: url('./assets/styles/argyropee_asset_border-portrait-fiche-acteur.webp'); 
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    
+    /* TRÈS IMPORTANT : Permet de "passer à travers" le cadre au clic 
+       pour pouvoir cliquer sur l'image en dessous et la modifier dans Foundry */
+    pointer-events: none; 
+}
+
+/* ========================================== */
+/* LAYOUT DES ONGLETS ET GRILLES              */
+/* ========================================== */
+.tab-content-col { display: flex; flex-direction: column; gap: 20px; }
+.grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* ========================================== */
+/* BOÎTES THÉMATIQUES (FIELDSETS)             */
+/* ========================================== */
+.sheet-box {
+    padding: 10px;
+    border-radius: 5px;
+    margin: 0;
+}
+.sheet-legend {
+    font-weight: bold;
+    font-family: 'Renaiss', serif;
+    font-size: 1.2em;
+}
+
+/* Thème Rouge */
+.sheet-box.red {
+	border: 1px solid #4a0000;
+	background: rgba(74, 0, 0, 0.05);
+	margin-bottom: 15px;
+}
+.sheet-box.red .sheet-legend { color: #4a0000; }
+.sheet-box.red .items-header { border-bottom: 2px solid #4a0000; }
+
+/* Thème Bleu (Armures & État Civil) */
+.sheet-box.blue { border: 1px solid #192a51; background: rgba(25, 42, 81, 0.05); margin-bottom: 15px;}
+.sheet-box.blue .sheet-legend { color: #192a51; }
+.sheet-box.blue .items-header { border-bottom: 2px solid #192a51; }
+
+/* Thème Vert (Alchimie & Métiers) */
+.sheet-box.green { border: 1px solid #004a2e; background: rgba(0, 74, 46, 0.05); margin-bottom: 15px;}
+.sheet-box.green .sheet-legend { color: #004a2e; }
+.sheet-box.green .items-header { border-bottom: 2px solid #004a2e; }
+
+/* Thème Violet (Magie & Histoire) */
+.sheet-box.purple { border: 1px solid #4a0064; background: rgba(74, 0, 100, 0.05); }
+.sheet-box.purple .sheet-legend { color: #4a0064; }
+.sheet-box.purple .items-header { border-bottom: 2px solid #4a0064; }
+
+/* Thème Or (Richesses) */
+.sheet-box.gold { border: 2px solid #d4af37; background: rgba(212, 175, 55, 0.05); }
+.sheet-box.gold .sheet-legend { color: #b8860b; }
+
+/* Thème Gris (Inventaire rangé) */
+.sheet-box.gray { border: 1px solid #7a7971; background: rgba(0,0,0,0.03); }
+.sheet-box.gray .sheet-legend { color: #555; font-size: 1.1em; }
+
+/* Thème Sombre (Encombrement) */
+.sheet-box.dark { border: 1px solid #555; background: rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.sheet-box.dark .sheet-legend { color: #555; }
+
+/* Thème Clair (Munitions, Background) */
+.sheet-box.light { border: 1px solid #000; background: rgba(255,255,255,0.3); margin-bottom: 20px;}
+.sheet-box.light .sheet-legend { color: #192a51; }
+
+/* Thème Clair (item) */
+.sheet-box.light-item { border: 1px solid wheat; background: rgba(255,255,255,0.3); margin-bottom: 20px;}
+.sheet-box.light-item .sheet-legend { color: wheat; }
+
+/* ========================================== */
+/* LISTES ET COLONNES D'INVENTAIRE            */
+/* ========================================== */
+.items-list { list-style: none; padding: 0; margin: 0; }
+
+.items-header {
+    display: flex;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.items-list .item {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.item-name { flex: 2; display: flex; align-items: center; gap: 10px; }
+.item-name img { border: none; border-radius: 3px; }
+.item-name img.grayscale { filter: grayscale(100%); border: 1px solid #7a7971; }
+.item-name span { font-weight: bold; font-family: 'Renaiss', serif; font-size: 1.2em; }
+.item-name span.small { font-size: 1.1em; }
+
+.item-stat { flex: 1; text-align: center; }
+.item-stat.bold { font-weight: bold; }
+.item-actions { display: flex; justify-content: space-between; align-items: center; }
+
+/* ========================================== */
+/* ÉLÉMENTS SPÉCIFIQUES                       */
+/* ========================================== */
+/* Champs de texte lignés (État Civil) */
+.line-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #000;
+    background: transparent;
+    outline: none;
+    text-align: center;
+}
+
+/* Boîtes de monnaie */
+.wealth-boxes { display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap; gap: 10px; }
+.wealth-item { padding: 5px; border-radius: 5px; flex: 1; min-width: 80px; }
+.wealth-item input { width: 100%; text-align: center; font-size: 1.2em; border: none; background: transparent; font-weight: bold; outline: none; }
+
+/* Cartes d'effets et maladies */
+.effect-card {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; border: 1px solid #ccc; padding: 8px; margin-bottom: 5px; border-radius: 3px;
+}
+.disease-card {
+    border: 1px solid #4a0000; background: white; margin-bottom: 10px; padding: 10px; 
+    border-radius: 3px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+.disease-btn {
+    width: 100%; padding: 5px; font-size: 1em; background: #4a0000; color: white; 
+    border: none; border-radius: 3px; cursor: pointer;
+}
+
+/* ========================================== */
+/* PERSONNALISATION DE LA BARRE DE DÉFILEMENT */
+/* ========================================== */
+
+/* Appliquer les règles standards (pour Firefox) */
+.argyropee.sheet.actor .window-content,
+.argyropee.sheet.actor .sheet-body {
+    scrollbar-width: thin;
+    scrollbar-color: #cccdcf rgba(0, 0, 0, 0.05);
+}
+
+/* 1. Largeur globale de la barre (Chrome, Edge, client Foundry) */
+.argyropee.sheet.actor ::-webkit-scrollbar {
+    width: 8px; /* Largeur de la barre verticale */
+    height: 8px; /* Hauteur de la barre horizontale si elle apparaît */
+}
+
+/* 2. Le "rail" (le fond sur lequel glisse la barre) */
+.argyropee.sheet.actor ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05); /* Un fond très légèrement grisé/transparent */
+    border-radius: 4px;
+}
+
+/* 3. Le "pouce" (la jauge de défilement en elle-même) */
+.argyropee.sheet.actor ::-webkit-scrollbar-thumb {
+    background: #cccdcf; /* TA COULEUR personnalisée ! */
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Petite bordure subtile pour détacher la jauge */
+}
+
+/* 4. Le "pouce" au survol de la souris */
+.argyropee.sheet.actor ::-webkit-scrollbar-thumb:hover {
+    background: #b0b1b3; /* Légèrement plus foncé quand on passe la souris dessus */
+}
+
+/* ========================================== */
+/* HEADER DE LA FICHE D'ACTEUR                */
+/* ========================================== */
+
+/* Layout principal du header */
+.argyropee.sheet.actor .sheet-header-layout {
+    display: flex;
+    gap: 35px;
+    align-items: stretch;
+    margin-bottom: 10px;
+    margin-right: 15px;
+}
+
+.argyropee.sheet.actor .header-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+/* Ligne supérieure (Nom et Métier) */
+.argyropee.sheet.actor .header-row-top {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    border-bottom: 2px solid #cccdcf;
+    padding-bottom: 15px;
+}
+
+/* Typographie partagée (Labels) */
+.argyropee.sheet.actor .header-label {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    color: #cccdcf;
+    display: block;
+}
+
+/* Zone du Nom */
+.argyropee.sheet.actor .header-name-input {
+    font-family: 'Renaiss', serif;
+    font-size: 2.2em;
+    border: none;
+    background: transparent;
+    padding: 0;
+    width: 100%;
+    height: 1.2em;
+    outline: none;
+    color: #3b78b6;
+}
+
+/* Zone du Métier */
+.argyropee.sheet.actor .header-job-value {
+    font-family: 'Renaiss', serif;
+    font-size: 1.5em;
+    color: #3b78b6;
+    margin-top: 5px;
+}
+.argyropee.sheet.actor .header-job-none {
+    font-size: 1em;
+    color: #777;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Ligne inférieure (Blocs de statistiques) */
+.argyropee.sheet.actor .header-stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.argyropee.sheet.actor .stat-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.argyropee.sheet.actor .stat-separator {
+    font-size: 2em;
+    font-weight: bold;
+    color: #cccdcf;
+}
+
+/* Design des boîtes de statistiques */
+.argyropee.sheet.actor .stat-box {
+    position: relative;
+    border: 3px double #cccdcf;
+    padding: 5px;
+    width: 60px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.argyropee.sheet.actor .stat-box.large {
+    width: 80px; /* Pour l'Initiative qui demande un peu plus de place */
+}
+
+/* Variante verte pour les points temporaires */
+.argyropee.sheet.actor .stat-box.temp {
+    border-color: #00915a;
+    background: rgba(0, 74, 46, 0.1);
+}
+
+.argyropee.sheet.actor .stat-input {
+    width: 100%;
+    text-align: center;
+    font-size: 1.8em;
+    border: none;
+    background: transparent;
+    outline: none;
+    color: #000;
+}
+
+.argyropee.sheet.actor .stat-input.temp {
+    color: #004a2e;
+}
+
+/* Étiquettes sous les boîtes (Panache, PS Max, etc.) */
+.argyropee.sheet.actor .stat-label {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #cccdcf;
+    color: #000;
+    font-family: 'Renaiss', serif;
+    font-size: 1.1em;
+    padding: 2px 6px;
+    border: 1px solid #fff;
+    white-space: nowrap;
+    line-height: 1.3;
+}
+
+.argyropee.sheet.actor .stat-label.interactive {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.argyropee.sheet.actor .stat-label.interactive:hover {
+    background: #b0b1b3;
+}
+
+.argyropee.sheet.actor .stat-label.temp {
+    background: #00915a;
+    color: #fff;
+    padding: 2px 12px;
+}
+
+/* Bouton de Repos (Lit) */
+.argyropee.sheet.actor .rest-btn {
+    font-size: 1.5em;
+    margin-left: 15px;
+    color: #192a51;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.argyropee.sheet.actor .rest-btn:hover {
+    transform: scale(1.1);
+}
+
+/* ========================================== */
+/* CARTES DE CHAT (JETS DE DÉS ET ACTIONS)    */
+/* ========================================== */
+
+/* Conteneur principal */
+.argyropee-roll {
+    font-family: 'LinR', sans-serif;
+    color: #000;
+}
+
+/* En-têtes (Standardisés pour ressembler aux sorts) */
+.argyropee-roll header {
+    padding: 6px;
+    text-align: center;
+    color: white;
+    font-family: 'Renaiss', serif;
+    font-size: 1.3em;
+    font-weight: bold;
+    border-radius: 3px 3px 0 0;
+}
+
+/* Thèmes de couleurs automatiques via les classes */
+.argyropee-roll.skill header { background: #192a51; } /* Bleu nuit */
+.argyropee-roll.attack header { background: #8b0000; } /* Rouge sang */
+.argyropee-roll.spell header { background: #4a0064; } /* Violet magique */
+.argyropee-roll.consumable header { background: #004a2e; } /* Vert alchimie */
+.argyropee-roll.poison header { background: darkred; } /* Rouge poison */
+.argyropee-roll.potion header { background: #3b78b6; } /* Bleu potion */
+.argyropee-roll.trap header { background: #222222; } /* Gris sombre */
+.argyropee-roll.panache header { background: #b8860b; color: white; } /* Or */
+.argyropee-roll.rest header { background: #192a51; } /* Bleu nuit */
+.argyropee-roll.damage header { background: #4a0000; } /* Rouge très sombre */
+
+/* Corps de la carte */
+.argyropee-roll .roll-body {
+    padding: 5px;
+}
+.argyropee-roll.skill .roll-body { border: 1px solid #192a51; }
+.argyropee-roll.attack .roll-body { border: 1px solid #8b0000; } /* Rouge sang */
+.argyropee-roll.spell .roll-body { border: 1px solid #4a0064; } /* Violet magique */
+.argyropee-roll.consumable .roll-body { border: 1px solid #004a2e; } /* Vert alchimie */
+.argyropee-roll.poison .roll-body { border: 1px solid darkred; } /* Rouge poison */
+.argyropee-roll.potion .roll-body { border: 1px solid #3b78b6; } /* Bleu potion */
+.argyropee-roll.trap .roll-body { border: 1px solid #222222; } /* Gris sombre */
+.argyropee-roll.panache .roll-body { border: 1px solid #b8860b; color: white; } /* Or */
+.argyropee-roll.rest .roll-body { border: 1px solid #192a51; } /* Bleu nuit */
+.argyropee-roll.damage .roll-body { border: 1px solid #4a0000; } /* Rouge très sombre */
+
+/* Détails (Calculs, portées, domaines...) */
+.argyropee-roll .roll-details {
+    text-align: center;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Boîte de résultat (Description, total du jet, encart) */
+.argyropee-roll .roll-result-box {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    text-align: center;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+.argyropee-roll .roll-result-box.justify { text-align: justify; }
+
+/* Styles du total du dé */
+.argyropee-roll .roll-result-box .dice-total {
+    font-size: 1.4em;
+    font-weight: bold;
+    padding: 5px;
+    margin-top: 5px;
+    border: 2px solid transparent;
+    background: white;
+}
+.argyropee-roll .roll-result-box .dice-total.crit-success { border-color: #006400; color: #006400; background: rgba(0, 100, 0, 0.05); }
+.argyropee-roll .roll-result-box .dice-total.success { color: #004a2e; }
+.argyropee-roll .roll-result-box .dice-total.fail { color: #555; }
+.argyropee-roll .roll-result-box .dice-total.crit-fail { border-color: #8b0000; color: #8b0000; background: rgba(139, 0, 0, 0.05); }
+
+/* Footer (Reste de Panache, Quantité, etc.) */
+.argyropee-roll .roll-footer {
+    text-align: center;
+    font-size: 0.85em;
+    color: #777;
+    border-top: 1px dashed #ccc;
+    padding-top: 5px;
+    margin-top: 10px;
+}
+
+/* Boîte d'avertissement (Aveuglement, Poison...) */
+.argyropee-roll .warning-box {
+    color: darkred;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid darkred;
+    background: rgba(139, 0, 0, 0.1);
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+
+/* Boutons d'action dans le chat */
+.argyropee-roll button {
+    width: 100%;
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    border: 1px solid #777;
+    padding: 5px;
+    font-family: inherit;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.argyropee-roll button.action-btn { background: #192a51; color: white; border-color: #0d162b; }
+.argyropee-roll button.action-btn:hover { background: #0d162b; }
+.argyropee-roll button.damage-btn { background: #8b0000; color: white; border-color: #4a0000; }
+.argyropee-roll button.damage-btn:hover { background: #5a0000; }
+.argyropee-roll button.effect-btn { background: rgba(74, 0, 100, 0.1); color: #4a0064; border-color: #4a0064; }
+.argyropee-roll button.effect-btn:hover { background: rgba(74, 0, 100, 0.2); }
+.argyropee-roll button.consumable-btn { background: rgba(0, 74, 46, 0.1); color: #004a2e; border-color: #004a2e; }
+.argyropee-roll button.trap-btn { background: rgba(0, 0, 0, 0.1); color: #000; border-color: #000; }
+.argyropee-roll button.undo-btn { background: white; color: #555; border: 1px solid #ccc; font-weight: normal; }
+
+/* --- Style carte de chat --- */
+li.chat-message.message.flexcol {
+    background-image: url('./assets/styles/argyropee_asset_fond-journal.webp');
+    /* --- BORDURE EN IMAGE --- */
+    border: 5px solid transparent; /* L'épaisseur de ton cadre physique */
+    border-image-source: url('./assets/styles/argyropee_asset_border-fiche-acteurC.webp');
+    border-image-slice: 100; /* Ajuste cette valeur selon la taille de ton image */
+    border-image-repeat: stretch; 
+}
+
+/* ========================================== */
+/* STYLE DU JOURNAL          */
+/* ========================================== */
+
+.sheet.journal-entry .journal-entry-page :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
+	margin-top: 0;
+}
+
+.sheet.journal-entry .journal-entry-content {
+	background: url("./assets/styles/argyropee-styles-fondpage.webp") repeat;
+	background-position: center top;
+	background-size: cover;
+}
+
+.sheet.journal-entry .journal-page-content {
+	margin-left: 4em;
+	margin-right: 3.5em;
+}
+.custom-system-actor-content {
+	background: url("./assets/styles/argyropee-styles-fondpage.webp") repeat;
+	background-position: center top;
+	background-size: cover;
+	font-family: 'BellMT';
+}
+
+.custom-system-actor .profile-img-container {
+	border: 20px solid transparent; 
+    border-image: url('./assets/styles/argyropee-styles-border-portrait.webp') 30 stretch; 
+    box-sizing: border-box;
+}
+
+.custom-system-actor-content .sheet-header {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+.custom-system-actor-content .custom-system-customBody {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+.custom-system-actor-content .sheet-header h1.charname {
+	margin-bottom: 20px;
+}
+
+.custom-system-actor-content .sheet-header h1 input {
+	border:0;
+	background:0;
+	text-align: center;
+	font-family: 'Renaiss';
+	font-size:2em;
+}
+
+.custom-system-component-contents h3 {
+	font-family: 'Renaiss';
+	font-weight:600;
+	font-size: 1.5em;
+	margin-bottom: 1em;
+	border:none;
+}
+
+.custom-system-component-contents table tr {
+	height: 3em;
+}
+
+.fiche_titre {
+	font-family: 'Renaiss';
+	font-weight: 600;
+	font-size: 1.5em;
+	padding-top: 1em;
+}
+
+.custom-system-actor nav.sheet-tabs {
+	font-weight: 600;
+	font-size: 1.2em;
+	font-family: 'Renaiss';
+	margin-bottom: 1em;
+}
+
+.journal-sheet .journal-header .title {
+	background: rgba(0, 0, 0, 0);
+	font-family: "Renaiss";
+    font-size: 3em;
+	font-variant-caps: small-caps;
+	color: rgb(0, 0, 0);
+    height: auto;
+    line-height: normal;
+    border: 0;
+	padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+.journal-entry-page h1 {
+	position: relative;
+    font-family: "Renaiss";
+    font-size: 4em;
+    color: black;
+    border-bottom: 0;
+    padding-bottom: 40px;
+    margin-left: 60px;
+    padding-left: 30px;
+    margin-right: 48px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+	font-variant-caps: small-caps;
+}
+
+.journal-entry-page h1::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: -28px;
+    height: 70px; /* Ajustez selon la hauteur de l'image gauche */
+    width: 70px; /* Ajustez selon la largeur de l'image gauche */
+    background: url('./assets/styles/argyropee_styles_h1_border-right.webp') no-repeat left center;
+	background-size: auto 100%;
+}
+
+.journal-entry-page h1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 7px; /* Cette valeur doit correspondre à la largeur de l'image gauche */
+    right: 0;
+    height: 70px; /* Ajustez selon la hauteur de l'image droite */
+    background: url('./assets/styles/argyropee_styles_h1_border-left.webp') repeat-x;
+    background-size: auto 100%; /* La droite s'étire horizontalement */
+}
+
+.argyropee {
+	font-family: "LinR";
+	font-size: 1.15em;
+}
+
+.argyropee .image-droite-60 {
+	float:right;
+	max-width: 60%;
+	margin: 10px 0px 5px 15px;
+	border: double 5px #192a51;
+}
+
+.argyropee .image-gauche-60 {
+	float:left;
+	max-width: 60%;
+	margin: 10px 0px 5px 15px;
+	border: double 5px #192a51;
+}
+
+.argyropee h2 {
+	position: relative;
+	font-size: 1.5em;
+	font-family: 'LinB';
+	color: black;
+	margin-bottom: 0em;
+	padding-bottom: 20px;
+	padding-top: 0.3em;
+	border:0;
+}
+
+.argyropee h2::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: -28px;
+    height: 35px; /* Ajustez selon la hauteur de l'image gauche */
+    width: 35px; /* Ajustez selon la largeur de l'image gauche */
+    background: url('./assets/styles/argyropee_styles_h3_border-left.png') no-repeat left center;
+	background-size: auto 100%;
+}
+
+.argyropee h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 7px; /* Cette valeur doit correspondre à la largeur de l'image gauche */
+    right: 0;
+    height: 35px; /* Ajustez selon la hauteur de l'image droite */
+    background: url('./assets/styles/argyropee_styles_h3_border-right.png') repeat-x;
+    background-size: auto 100%; /* La droite s'étire horizontalement */
+}
+
+.argyropee h3 {
+	font-family: 'LinB';
+	font-size: 1.2em;
+	border: 0;
+	color: #4a0000 ;
+}
+
+.argyropee p {
+	font-size: 1.05em;
+	line-height: 1.2em;
+	text-indent: 1em;
+	text-align: justify;
+}
+
+.argyropee blockquote {
+	margin-left: 25px;
+    border: 0;
+    margin-top: -50px;
+    font-family: 'High';
+    font-size: 1.15em;
+}
+
+.argyropee table p {
+	text-indent: unset;
+    text-align: unset;
+    margin-left: 0.1em;
+}
+
+.argyropee table th {
+	text-align: unset;
+}
+
+.argyropee table th p {
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+.argyropee li p {
+	text-align: unset;
+	text-indent: unset;	
+}
+
+.argyropee .introduction h1 {
+	font-family: "LinB";
+    border: 0;
+    text-align: center;
+    font-size: 3em;
+    color: black;
+	margin: 0;
+	padding-left: 0;
+}
+
+.introduction h1::before {
+    content: none;
+}
+
+.introduction h1::after {
+    content: none;
+}
+
+.argyropee .introduction h2 {
+	position: relative;
+	border: 0;
+	font-size: 2.5em;
+	text-align: center;
+	color: black;
+	margin-bottom: 1em;
+}
+
+.argyropee .introduction h2::before {
+    content: "";
+    position: absolute;
+    top: 55%; /* Place l'image au milieu de la hauteur du titre */
+    left: 15px;
+    transform: translateY(-50%); /* Centre verticalement l'image */
+    height: 25px; /* Ajustez selon la hauteur souhaitée */
+    width: 50px; /* Garde les proportions de l'image */
+    background: url('./assets/styles/argyropee_styles_h2_border-left.png') no-repeat left center;
+    background-size: auto 100%; /* Assure que l'image se redimensionne en hauteur */
+}
+
+.argyropee .introduction h2::after {
+    content: "";
+    position: absolute;
+    top: 55%; /* Place l'image au milieu de la hauteur du titre */
+    left: 50px; /* Cette valeur doit correspondre à la largeur de l'image gauche si nécessaire */
+    right: 15px;
+    transform: translateY(-50%); /* Centre verticalement l'image */
+    height: 25px; /* Ajustez selon la hauteur souhaitée de l'image droite */
+    background: url('./assets/styles/argyropee_styles_h2_border-right.png') no-repeat right center;
+    background-size: auto 100%; /* La droite s'étire horizontalement */
+}
+
+.argyropee .introduction h3 {
+	position: relative;
+	font-size: 1.5em;
+	font-family: 'LinB';
+	color: black;
+	margin-bottom: 0em;
+	padding-bottom: 20px;
+	border:0;
+	margin-bottom: 1em;
+}
+
+.argyropee .introduction h3::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: -28px;
+    height: 35px; /* Ajustez selon la hauteur de l'image gauche */
+    width: 35px; /* Ajustez selon la largeur de l'image gauche */
+    background: url('./assets/styles/argyropee_styles_h3_border-left.png') no-repeat left center;
+	background-size: auto 100%;
+}
+
+.argyropee .introduction h3::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 7px; /* Cette valeur doit correspondre à la largeur de l'image gauche */
+    right: 0;
+    height: 35px; /* Ajustez selon la hauteur de l'image droite */
+    background: url('./assets/styles/argyropee_styles_h3_border-right.png') repeat-x;
+    background-size: auto 100%; /* La droite s'étire horizontalement */
+}
+
+.argyropee .recit {
+	background-color: #E6EFE9;
+    font-family: "Fineprint";
+    border: solid 2px #192a51;
+    margin: 2em 2em 2em 2em;
+    padding: 1em 2em;
+    font-size: 1.1em;
+}
+
+.exemple {
+	background-color: rgba(0, 0, 0, 0.658);
+    color: white;
+    padding: 2em;
+    margin: 1em 5em 1em 5em;
+	border: double 4px;
+}
+
+.exemple h4 {
+	font-size: 1.5em;
+	font-family: "Renaiss";
+	font-weight: 600;
+	text-align: center;
+}
+
+a.content-link {
+	border:none;
+	background: none;
+	font-weight: 600;
+}
+
+.argyropee table td {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.argyropee table th {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+/*
+.journal-entry-page h1::first-letter {
+	color:rgb(0, 0, 0);
+}
+
+.journal-entry-page h2 {
+    font-family: "Headline";
+    font-size: 40px;
+    color: #8d8d8d;
+	border: none;
+}
+
+.journal-entry-page h3 {
+    font-family: "Headline";
+    font-size: 30px;
+    color: #1C3738;
+	border: none;
+}
+
+.journal-entry-page h4 {
+    font-family: "Headline";
+    font-size: 20px;
+    color: #09340D;
+	border: none;
+}
+
+.editor.prosemirror.editing-source textarea {
+	color:rgb(0, 0, 0);
+}
+
+.cthack-gilou {
+	margin: 5px;
+}
+
+.cthack-gilou a.content-link,
+a.inline-roll {
+  background: transparent;
+  border: 0px;
+  padding: 0px;
+  
+  font-weight: bold;
+  text-indent: 0;
+}
+
+.cthack-gilou p {
+    font-family: "EBGaramond";
+	font-size: 18px;
+	color:black;
+	margin:0;
+	text-indent: 2em;
+	text-align: justify;
+}
+
+.cthack-gilou li p {
+	text-indent: 0;
+}
+
+.cthack-gilou table {
+	width:90%;
+	border-collapse: collapse;
+	border: 2px solid rgb(88, 80, 70);
+	margin: auto;
+}
+
+.cthack-gilou table tr {
+	border: 2px solid rgb(88, 80, 70)
+}
+
+.cthack-gilou table td {
+	border: 2px solid rgb(88, 80, 70)
+}
+
+.cthack-gilou table th{
+	background-color: rgb(88, 80, 70);
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.cthack-gilou table th p {
+	font-family: "Headline";
+	color: rgb(255, 255, 255);
+	letter-spacing: 0.15em;
+	padding-left: 1em;
+	padding-right: 1em;
+	text-indent: 0;
+}
+
+.cthack-gilou table td p {
+	padding-left: 1em;
+	padding-right: 1em;
+	color: rgb(0, 0, 0);
+	text-indent: 0;
+}
+
+.cthack-gilou table tr:nth-child(even) {
+	background-color: #edecec;
+}
+
+.cthack-gilou table tr:nth-child(odd) {
+	background-color: #d9d4d0;
+}
+
+.cthack-gilou .presentation {
+	background-color: #D9D4D0;
+	width: 90%;
+	margin: 20px auto 20px auto;
+	padding: 20px;
+}
+
+.cthack-gilou .presentation h1 {
+	font-family: "Headline";
+	font-size: 60px;
+	text-align: center;
+	border: 0;
+	color: rgb(88, 80, 70);
+	margin: 0;
+	padding: 0;
+}
+
+.cthack-gilou .presentation h2 {
+	font-family: "Headline";
+	font-size: 40px;
+	text-align: center;
+	color: rgb(88, 80, 70);
+	margin: 0;
+	padding: 0;
+}
+
+.cthack-gilou .presentation h3 {
+	font-family: "Headline";
+	font-size: 20px;
+	color: rgb(88, 80, 70);
+	text-align: center;
+	margin: 0;
+	padding: 0;
+}
+
+.cthack-gilou .presentation h4 {
+	font-family: "Headline";
+	font-size: 20px;
+	color: #09340D;
+	text-align: center;
+}
+
+.cthack-gilou .encart {
+	background: #D9D4D0;
+	border: 3px double rgb(88, 80, 70);
+	border-radius: 30px;
+	margin: 30px 20px 30px 20px;
+	padding: 20px 30px 20px 30px;
+}
+
+.cthack-gilou .keeper {
+	background: #22201f;
+	border: 3px double rgb(255, 255, 255);
+	border-radius: 30px;
+	margin: 30px 20px 30px 20px;
+	padding: 20px 30px 20px 30px;
+}
+
+ .cthack-gilou .keeper p {
+	text-indent: 0;
+	color: #ffffff;
+	font-style: italic;
+}
+
+.cthack-gilou .location {
+	background: #bbc4cb;
+	border: 3px double	#00233a;
+	border-color: rgb(158, 192, 84);
+	border-radius: 30px;
+	margin: 20px 30px 20px 30px;
+	padding: 20px 30px 20px 30px;
+}
+
+.cthack-gilou .location img {
+	border: 10px solid #D9D4D0;
+	margin: 0px 50px 10px 50px;
+	max-width: 80%;
+}
+
+.cthack-gilou .location p {
+	text-indent: 0;
+	text-align: center;
+}
+
+.cthack-gilou .image-droite-60 {
+	float:right;
+	max-width: 60%;
+	margin: 10px 0px 5px 15px;
+	border: none;
+}
+
+.cthack-gilou figure img {
+	border: 10px solid #D9D4D0;
+}
+
+.cthack-gilou .stats {
+	background: #edecec;
+	border-top: 2px solid #585046;
+	border-bottom: 2px solid #585046;
+	border-color: rgb(158, 192, 84);
+	border-radius: 30px;
+	margin: 30px 20px 30px 20px;
+	padding: 20px 30px 20px 30px;
+}
+
+
+.cthack-gilou ul {
+	list-style-type: square;
+	font-family: "LinLibertine";
+	font-size: 1em;
+	text-align: justify;
+}
+
+.cthack-gilou ol {
+	font-family: "LinLibertine";
+	font-size: 1em;
+	text-align: justify;
+}
+
+.cthack-gilou h1 {
+    margin: 10px 0 10px 0;
+	padding: 0 0 10px 0;
+	background: url("./assets/illus/coc-cthulhu_illu-fondpage03.webp") repeat;
+	background-position: center top;
+	font-family: "Bookmania";
+    font-size: 40px;
+	font-variant-caps: small-caps;
+	color: rgb(255, 255, 255);
+    height: auto;
+    line-height: normal;
+    border: 2px solid;
+	border-color: rgb(45, 151, 59);
+	text-align: center;
+}
+
+.cthack-gilou h2 {
+    font-family: "RoyalVogue";
+    font-size: 1.5em;
+    color: rgb(11, 84, 111);
+    border-bottom: 1.5px solid rgb(11, 84, 111);
+}
+
+.cthack-gilou h3 {
+    font-family: "RoyalVogue";
+    font-size: 1em;
+    color: rgb(11, 84, 111);
+}
+
+.cthack-gilou h4 {
+	font-family: "LinLibertineBold";
+	font-size: 1em;
+	color: rgb(11, 84, 111);
+}
+
+.cthack-gilou .sous-titre p {
+	font-family: "Bookmania";
+	font-size: 20px;
+	font-variant-caps: small-caps;
+	text-align: center;
+	color: rgb(135, 135, 134);
+}
+
+.cthack-gilou img {
+	border: 0;
+}
+
+.cthack-gilou .encart {
+	background: rgb(248, 249, 243);
+	border: 2px solid;
+	border-color: rgb(158, 192, 84);
+	border-radius: 30px;
+	margin: 30px 20px 30px 20px;
+	padding: 20px 30px 20px 30px;
+}
+
+.cthack-gilou .credits {
+	background: rgb(255, 255, 255);
+	color: rgb(11, 84, 111);
+	border: 2px solid;
+	border-color: rgb(11, 84, 111);
+	border-radius: 30px;
+	margin: 30px auto 30px auto;
+	padding: 20px 30px 20px 30px;
+	width: 90%;
+}
+
+.cthack-gilou .credits h3 {
+	font-family: "CaviarBold";
+	font-size: 1.2em;
+	text-align: center;
+	color: rgb(11, 84, 111);
+}
+
+.cthack-gilou .credits p {
+	font-family: "CaviarDreams";
+	font-size: 1.1em;
+	text-align: center;
+	color: rgb(11, 84, 111);
+}
+
+.cthack-gilou .presentation {
+	background: url("./assets/illus/coc-cthulhu_illu-fondpage03.webp") repeat;
+	background-position: center top;
+	color: rgb(255, 255, 255);
+	width: 80%;
+	margin: 20px auto 20px auto;
+	padding: 20px;
+}
+
+.cthack-gilou .presentation h3 {
+	font-family: "LinLibertineBold";
+	font-size: 1.2em;
+	font-style: bold;
+	color: rgb(255, 255, 255);
+}
+
+.cthack-gilou .presentation .warning {
+	color:red;
+	text-align: center;
+}
+
+.cthack-gilou .presentation img {
+    max-height: 15px;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+
+.cthack-gilou .presentation table {
+	width: 75%;
+	border-collapse: collapse;
+	border: 0;
+	margin-right: 50%;
+	line-height: 0.5em;
+}
+
+.cthack-gilou .presentation table td p {
+	font-family: "LinLibertine";
+	padding-left: 0;
+	color: rgb(255, 255, 255);
+}
+
+.cthack-gilou .presentation table tr:nth-child(even) {
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.cthack-gilou .presentation table tr:nth-child(odd) {
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.cthack-gilou .img-float-left {
+	max-width: 50%;
+	padding-right: 10px;
+	padding-left: 10px;
+	margin-right: 20px;
+	break-inside: avoid;
+	font-style: normal;
+	float: left;
+	text-align: left;
+	border: 0;
+}
+
+.cthack-gilou .img-float-right {
+	max-width: 50%;
+	padding-right: 10px;
+	padding-left: 10px;
+	margin-left: 20px;
+	break-inside: avoid;
+	font-style: normal;
+	float: right;
+	text-align: right;
+	border: 0;
+}
+
+.cthack-gilou .img-float-left-little {
+	max-width: 40%;
+	padding-right: 10px;
+	padding-left: 10px;
+	margin-right: 20px;
+	margin-bottom: 2em;
+	break-inside: avoid;
+	font-style: normal;
+	float: left;
+	text-align: left;
+	border: 0;
+}
+
+.cthack-gilou .img-float-right-little {
+	max-width: 40%;
+	padding-right: 10px;
+	padding-left: 10px;
+	margin-left: 20px;
+	margin-bottom: 2em;
+	break-inside: avoid;
+	font-style: normal;
+	float: right;
+	text-align: right;
+	border: 0;
+}
+
+.cthack-gilou .capacite p {
+	font-family: "CaviarDreams";
+	font-size: 1em;
+	color: rgb(11, 84, 111);
+	text-align: 0;
+	margin-right: 0;
+}
+
+.cthack-gilou .bestiaire {
+	background: rgb(246, 248, 240);
+	border: 0;
+	margin: 1em 12.5% 1em 12.5%;
+	width: 75%;
+	padding-bottom: 20px;
+	display:inline-block;
+}
+
+.cthack-gilou .bestiaire h4 {
+	font-family: "LinLibertineBold";
+	font-size: 1em;
+	color:white;
+	font-variant-caps: small-caps;
+	background: rgb(158, 192, 84);
+	line-height: 2em;
+	text-align: center;
+	border: 0;
+}
+
+.cthack-gilou .bestiaire p {
+	font-family: "CaviarDreams";
+	font-size: 1em;
+	color: rgb(11, 84, 111);
+	text-align: 0;
+	margin-right: 2em;
+	margin-left: 2em;
+}
+
+.cthack-gilou .sidebar {
+	border-top: 2px solid rgb(11, 84, 111);
+	border-bottom: 2px solid rgb(11, 84, 111);
+	background: rgb(248, 249, 243);
+	margin: 15px 20px 15px 20px;
+	padding: 10px 10px 10px 10px;
+}
+
+.cthack-gilou .sidebar p {
+	font-family: "CaviarDreams";
+	font-size: 1em;
+	color: rgb(11, 84, 111);
+	text-align: justify;
+	margin-right: 0;
+}
+
+.cthack-gilou .sidebar ul {
+	font-family: "CaviarDreams";
+	font-size: 1em;
+	color: rgb(11, 84, 111);
+	text-align: justify;
+	list-style-position: outside;
+}
+
+.cthack-gilou .sidebar h3 {
+	font-family: "CaviarBold";
+	font-size: 1.1em;
+}
+
+.cthack-gilou .encart-exemple {
+	background: rgb(11, 84, 111);
+	border: 0;
+	border-color: rgb(11, 84, 111);
+	border-radius: 30px;
+	margin: 10px 20px 10px 20px;
+	padding: 15px 15px 15px 15px;
+}
+
+.cthack-gilou .encart-exemple p {
+	color: rgb(248, 249, 243);
+	font-style: italic;
+	letter-spacing: 0.025em;
+}
+
+.cthack-gilou .intro-grise {
+	color: rgb(135, 135, 134);
+	margin: 20px 50px 20px 50px;
+	padding: 10px 20px 10px 20px;
+	text-align: center;
+	border: 2px solid rgb(135, 135, 134);
+	background-color: rgb(248, 249, 243);
+}
+
+.cthack-gilou .intro-grise h2 {
+	font-size: 1.1em;
+	border: 0;
+	margin: 0;
+}
+
+.cthack-gilou .description {
+	background: rgb(246, 248, 240);
+	border-top: 2px solid;
+	border-bottom: 2px solid;
+	border-color: rgb(158, 192, 84);
+	margin: 1em 20px 1em 20px;
+	padding: 0 20px 0 20px;
+}
+
+.cthack-gilou .description p {
+	color: rgb(159, 193, 87);
+	font-family: "CaviarDreams";
+	font-style: italic;
+}
+
+.cthack-gilou table {
+	width:90%;
+	border-collapse: collapse;
+	border: 0;
+	margin: auto;
+}
+
+.cthack-gilou table th p {
+	font-family: "CaviarBold";
+	padding-left: 1em;
+	color: rgb(11, 84, 111);
+}
+
+.cthack-gilou table td p {
+	font-family: "CaviarDreams";
+	padding-left: 1em;
+	color: rgb(11, 84, 111);
+}
+
+.cthack-gilou table tr:nth-child(even) {
+	background-color: rgb(205, 211, 221);
+}
+
+.cthack-gilou table tr:nth-child(odd) {
+	background-color: rgb(248, 249, 243);
+}
+*/

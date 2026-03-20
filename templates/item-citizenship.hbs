@@ -1,0 +1,57 @@
+<div class="item-content-wrapper" style="height: 100%; margin-top: 10px">
+    
+    {{!-- ONGLET 0 : DESCRIPTION --}}
+    <div class="tab {{#if (eq tab.id 'description')}}active{{/if}}" data-tab="description" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend><i class="fas fa-book-open"></i> Description détaillée</legend>
+                <div style="min-height: 150px; margin-top: 10px;">
+                    <prose-mirror name="system.description" data-document-uuid="{{item.uuid}}" value="{{system.description}}" toggled="true" collaborate="false">
+                        {{{enrichedDescription}}}
+                    </prose-mirror>
+                </div>
+            </fieldset>
+        </section>
+    </div>
+
+    {{!-- ONGLET 1 : DÉTAILS --}}
+    <div class="tab {{#if (eq tab.id 'body')}}active{{/if}}" data-tab="body" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend>Caractéristiques de l'Origine</legend>
+                <div class="form-group highlight">
+                    <label style="text-transform: uppercase;">Bonus liés à l'Origine :</label>
+                    <input type="text" name="system.bonusInitial" value="{{system.bonusInitial}}" placeholder="+1 Art, Sciences Naturelles...">
+                </div>
+            </fieldset>
+        </section>
+    </div>
+
+    {{!-- ONGLET 2 : EFFETS --}}
+    <div class="tab {{#if (eq tab.id 'effects')}}active{{/if}}" data-tab="effects" style="height: 100%;">
+        <section class="sheet-body" style="padding: 10px;">
+            <fieldset class="item-fieldset">
+                <legend>Effets passifs</legend>
+                <div style="text-align: right; margin-bottom: 10px;">
+                    <a class="item-control add-effect-btn" data-action="addEffect"><i class="fas fa-plus"></i> Ajouter un Effet</a>
+                </div>
+                <ul class="items-list effects-list">
+                    {{#each effects as |effect|}}
+                    <li class="item effect flexrow" data-effect-id="{{effect.id}}">
+                        <div class="item-name flexrow" style="display: flex; flex: 3; align-items: center; gap: 10px;">
+                            <img src="{{effect.img}}" width="32" height="32" style="border: none; flex: 0 0 32px; object-fit: cover;"/>
+                            <span style="font-weight: bold; {{#if effect.disabled}}text-decoration: line-through; color: #777;{{/if}}">{{effect.name}}</span>
+                        </div>
+                        <div class="item-controls" style="font-size: 1.2em;">
+                            <a class="item-control" data-action="toggleEffect" style="color: {{#if effect.disabled}}#777{{else}}inherit{{/if}};"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                            <a class="item-control" data-action="editEffect" style="margin: 0 10px;"><i class="fas fa-edit"></i></a>
+                            <a class="item-control" data-action="deleteEffect" style="color: #ff6b6b;"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </fieldset>
+        </section>
+    </div>
+
+</div>
