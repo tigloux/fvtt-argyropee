@@ -82,6 +82,6 @@
     "units": "m"
   },
 
-  "manifest": "https://github.com/tigloux/argyropee/releases/latest/download/system.json",
-  "download": "https://github.com/tigloux/argyropee/releases/latest/download/argyropee.zip"
+  "manifest": "https://github.com/tigloux/fvtt-argyropee/releases/latest/download/system.json",
+  "download": "https://github.com/tigloux/fvtt-argyropee/releases/latest/download/argyropee.zip"
 }
