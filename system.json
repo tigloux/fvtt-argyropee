@@ -71,7 +71,21 @@
       "name": "corebook",
       "label": "Core Book (Journal)",
       "path": "packs/core-book",
-      "type": "Journal",
+      "type": "JournalEntry",
+      "system": "argyropee"
+    },
+    {
+      "name": "npc",
+      "label": "Archétypes et Monstres",
+      "path": "packs/npc",
+      "type": "Actor",
+      "system": "argyropee"
+    },
+    {
+      "name": "manuel",
+      "label": "Manuels système (Journal)",
+      "path": "packs/manuels",
+      "type": "JournalEntry",
       "system": "argyropee"
     }
   ],
