@@ -30,7 +30,44 @@
       "maladie": {}
     }
   },
-  "packs": [],
+  "packs": [
+    {
+      "name": "armes",
+      "label": "Armes",
+      "path": "packs/armes",
+      "type": "Item",
+      "system": "argyropee"
+    },
+    {
+      "name": "protection",
+      "label": "Protection",
+      "path": "packs/protection",
+      "type": "Item",
+      "system": "argyropee"
+    },
+    {
+      "name": "consommables",
+      "label": "Consommables, pièges et maladies",
+      "path": "packs/consommables",
+      "type": "Item",
+      "system": "argyropee"
+    },
+    
+    {
+      "name": "sorts",
+      "label": "Sorts",
+      "path": "packs/sorts",
+      "type": "Item",
+      "system": "argyropee"
+    },
+    {
+      "name": "citoyennete",
+      "label": "Citoyenneté et métier",
+      "path": "packs/citoyennete",
+      "type": "Item",
+      "system": "argyropee"
+    }
+  ],
   "socket": true,
   "initiative": "1d10 - 1",
   "grid": {
