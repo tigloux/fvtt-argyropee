@@ -66,6 +66,13 @@
       "path": "packs/citoyennete",
       "type": "Item",
       "system": "argyropee"
+    },
+    {
+      "name": "corebook",
+      "label": "Core Book (Journal)",
+      "path": "packs/core-book",
+      "type": "Journal",
+      "system": "argyropee"
     }
   ],
   "socket": true,

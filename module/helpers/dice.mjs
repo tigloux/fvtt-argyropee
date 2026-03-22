@@ -1,13 +1,21 @@
 /**
-* Fichier centralisant toute la logique des jets de dés et actions d'Argyropée.
-* HTML nettoyé et lié à argyropee.css
-*/
+ * Fichier centralisant toute la logique des jets de dés, du combat et des actions d'Argyropée.
+ * @module dice
+ * * ARCHITECTURE :
+ * Ce fichier gère la résolution mécanique. Les fenêtres de dialogue utilisent 
+ * la nouvelle API DialogV2 de Foundry V13+ pour assurer la pérennité du système.
+ */
 
+/**
+ * Régénère la réserve de Panache matinale d'un acteur.
+ * @param {ArgyropeeActor} actor - L'acteur qui se réveille.
+ * @returns {Promise<ChatMessage>} Le message de chat affichant le résultat.
+ */
 export async function refreshPanache(actor) {
     const roll = new Roll("1d10");
     await roll.evaluate();
     const deBrut = roll.terms[0].results[0].result;
-    const deArgyropee = deBrut === 10 ? 0 : deBrut;
+    const deArgyropee = deBrut === 10 ? 0 : deBrut; // Règle d'Argyropée : le 10 vaut 0.
     
     const bonusPermanent = actor.system.panache.bonus || 0;
     const nouveauTotal = 10 + deArgyropee + bonusPermanent;
@@ -30,12 +38,19 @@ export async function refreshPanache(actor) {
     });
 }
 
+/**
+ * Lance un test de compétence (Gère la différence entre PJs et PNJs).
+ * @param {ArgyropeeActor} actor - Le lanceur (PJ, PNJ ou Monstre).
+ * @param {string} skillKey - La clé système de la compétence (ex: "agilite").
+ * @returns {Promise<ChatMessage|void>} Le résultat du jet dans le chat.
+ */
 export async function rollSkill(actor, skillKey) {
     const label = CONFIG.ARGYROPEE.competences[skillKey] || skillKey;
     let compValeur = 0;
     let pnjRollDetails = "";
     
-    // 1. On récupère la catégorie et le modificateur d'état
+    // 1. Récupération de la catégorie et du modificateur d'état
+    // DEV : getProperty est crucial ici car les Active Effects créent parfois des flags mal formatés.
     const categorie = CONFIG.ARGYROPEE.categories[skillKey];
     let modCategorie = 0;
     if (categorie) {
@@ -45,10 +60,12 @@ export async function rollSkill(actor, skillKey) {
     
     // 2. Calcul de la valeur de compétence selon le type d'acteur
     if (actor.type === "character") {
-        // Pour les PJs, actor.mjs a déjà fait le calcul, on prend juste la valeur
+        // DEV : Pour les PJs, les modificateurs de catégorie (-2 Fatigue etc.) sont DÉJÀ 
+        // soustraits de la valeur de base par `actor.mjs` (prepareDerivedData).
         compValeur = actor.system.competences[skillKey] || 0;
     } else {
-        // Pour les PNJs/Monstres, on lance le d6 et on Y AJOUTE le modificateur !
+        // DEV : Les PNJs n'ont pas de système de jetons de couleurs. On doit appliquer 
+        // le malus de catégorie à la volée après leur jet de d6.
         const isPrivileged = actor.system.skills[skillKey];
         const pnjSkillRoll = new Roll("1d6");
         await pnjSkillRoll.evaluate();
@@ -63,7 +80,7 @@ export async function rollSkill(actor, skillKey) {
         }
     }
     
-    // --- GESTION FAIM & SOIF ---
+    // --- GESTION DES MALUS D'ÉTATS GLOBAUX ---
     const isAffame = actor.statuses.has("affame");
     const isAssoiffe = actor.statuses.has("assoiffe");
     let malusFaim = isAffame ? (actor.flags?.argyropee?.malusFaim || 1) : 0;
@@ -72,6 +89,7 @@ export async function rollSkill(actor, skillKey) {
     let modificateurGlobal = (parseInt(actor.flags?.argyropee?.malusGlobal) || 0) - malusFaim - malusSoif; 
     let modificateurTotal = modificateurGlobal;
 
+    // Récupération des métiers pour la boite de dialogue
     const metiers = actor.items.filter(i => i.type === "metier");
     let metierOptions = `<option value="0">Aucun métier applicable (+0)</option>`;
     metiers.forEach(m => {
@@ -124,7 +142,7 @@ export async function rollSkill(actor, skillKey) {
     let deBrut = roll.terms[0].results[0].result;
     const deArgyropee = deBrut === 10 ? 0 : deBrut;
     
-    // --- GESTION DES SENS ---
+    // --- VÉRIFICATION DES SENS (Cécité, Surdité...) ---
     const isBlind = actor.flags?.argyropee?.aveugle;
     const isDazzled = actor.flags?.argyropee?.ebloui;
     const isDeaf = actor.flags?.argyropee?.assourdi;
@@ -149,7 +167,7 @@ export async function rollSkill(actor, skillKey) {
         }
     }
     
-    // Calcul du total en incluant le potentiel malus de sens
+    // Calcul du total
     const total = deArgyropee + compValeur + result.metierBonus + result.autreBonus + modificateurTotal + malusSens;
     
     let reussiteLabel = "", cssClass = "";
@@ -184,6 +202,10 @@ export async function rollSkill(actor, skillKey) {
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: actor }), content: chatContent, rolls: [roll] });
 }
 
+/**
+ * Lance l'initiative et l'insère dans le Combat Tracker.
+ * @param {ArgyropeeActor} actor - L'acteur rejoignant le combat.
+ */
 export async function rollInitiative(actor) {
     const initFinale = actor.type === "character" ? (actor.system.initiativeFinale || 0) : (actor.system.initiativeBonus || 0);
     
@@ -212,13 +234,18 @@ export async function rollInitiative(actor) {
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: actor }), content: content, rolls: [roll] });
 }
 
+/**
+ * Traite une attaque avec une arme (Gestion des munitions, états, cibles, etc.).
+ * @param {ArgyropeeActor} actor - L'attaquant.
+ * @param {Item} weapon - L'arme utilisée.
+ */
 export async function rollAttack(actor, weapon) {
     const skillKey = weapon.system.associatedSkill || "combat_rapproche";
     const label = CONFIG.ARGYROPEE.competences[skillKey] || skillKey;
     let compValeur = 0;
     let pnjRollDetails = "";
     
-    // 1. On récupère la catégorie de l'arme et le modificateur d'état
+    // 1. Modificateur d'état spécifique à la catégorie de compétence de l'arme
     const categorie = CONFIG.ARGYROPEE.categories[skillKey];
     let modCategorie = 0;
     if (categorie) {
@@ -244,6 +271,7 @@ export async function rollAttack(actor, weapon) {
         }
     }
     
+    // --- GESTION DES MUNITIONS ---
     let compatibleAmmo = [];
     if (weapon.system.consumeAmmo) {
         compatibleAmmo = actor.items.filter(i => i.type === "munition" && i.system.ammoType === weapon.system.ammoType && i.system.quantity > 0);
@@ -306,6 +334,7 @@ export async function rollAttack(actor, weapon) {
     
     let munitionTexte = "", baseDamage = weapon.system.damage || "0", ammoEffectsHtml = "";
     
+    // --- CONSOMMATION DES MUNITIONS ET RÉCUPÉRATION DES BONUS ---
     if (weapon.system.consumeAmmo && result.selectedAmmoId) {
         const ammo = actor.items.get(result.selectedAmmoId);
         if (ammo) {
@@ -315,6 +344,8 @@ export async function rollAttack(actor, weapon) {
                 const bonus = ammo.system.damageBonus.trim();
                 baseDamage += bonus.startsWith("+") || bonus.startsWith("-") ? bonus : `+${bonus}`;
             }
+
+            // Transfert des boutons d'effets (ex: Projectiles de verre => Hémorragie)
             const munitionEffets = ammo.effects.filter(e => !e.transfer);
             if (munitionEffets.length > 0) {
                 ammoEffectsHtml = `
@@ -332,15 +363,6 @@ export async function rollAttack(actor, weapon) {
     let malusGlobal = parseInt(actor.flags?.argyropee?.malusGlobal) || 0; 
     const isBlind = actor.flags?.argyropee?.aveugle;
     const warningAveugle = isBlind ? `<div class="warning-box">⚠️ LE TIREUR EST AVEUGLÉ !</div>` : "";
-    // --- LECTURE DU MODIFICATEUR DE CATÉGORIE (Ex: physique pour les armes) ---
-    const categorieArme = CONFIG.ARGYROPEE.categories[competenceArme];
-    let modificateurCategorie = 0;
-    if (categorieArme) {
-        const flagValue = foundry.utils.getProperty(actor, `flags.argyropee.modificateurs.${categorieArme}`);
-        if (flagValue) {
-            modificateurCategorie = parseInt(flagValue) || 0;
-        }
-    }
     
     // ==========================================
     // VÉRIFICATION DE LA CIBLE : ÉTAT "À TERRE"
@@ -367,7 +389,8 @@ export async function rollAttack(actor, weapon) {
     // ==========================================
     // MOTEUR GÉNÉRIQUE DE BONUS D'ATTAQUE
     // ==========================================
-    let bonusMagiqueAttaque = 0;
+    // ARCHITECTURE : Lit dynamiquement tous les drapeaux d'effets magiques du lanceur
+    // pour appliquer des buffs d'attaque/dégâts selon le type d'arme.let bonusMagiqueAttaque = 0;
     let bonusMagiqueDegats = 0;
     let desMagiquesDegats = "";
     let texteMagie = "";
@@ -395,6 +418,7 @@ export async function rollAttack(actor, weapon) {
             let isUnique = false;
             
             // On parcourt les "Changements" configurés dans l'interface de Foundry
+            // DEV : Pensez à ajouter vos nouvelles clés (Flags) d'extension de règles ici.
             for (let change of effet.changes) {
                 if (change.key === "flags.argyropee.typeAttaque") conditionArme = change.value;
                 if (change.key === "flags.argyropee.bonusAttaque") aAttaque += Number(change.value);
@@ -403,7 +427,7 @@ export async function rollAttack(actor, weapon) {
                 if (change.key === "flags.argyropee.usageUnique" && change.value === "true") isUnique = true;
             }
 
-            // (Sécurité) Si le MJ a utilisé l'ancienne méthode via macro, on les lit aussi
+            // Fallback (Macros MJs obsolètes)
             if (effet.flags?.argyropee?.typeAttaque) conditionArme = effet.flags.argyropee.typeAttaque;
             if (effet.flags?.argyropee?.bonusAttaque) aAttaque += Number(effet.flags.argyropee.bonusAttaque);
             if (effet.flags?.argyropee?.bonusDegats) aDegats += Number(effet.flags.argyropee.bonusDegats);
@@ -442,8 +466,10 @@ export async function rollAttack(actor, weapon) {
     }
 
     // ==========================================
-    // AURAS ET DÉGÂTS DE RENVOI (Mêlée uniquement)
+    // AURAS DE RIPOSTE (Dégâts de Retour)
     // ==========================================
+    // ARCHITECTURE : Si on attaque au CàC et que la cible a une Aura de flammes/épines,
+    // on gère les dégâts sur l'attaquant en direct.
     let texteRetourAura = "";
     
     // On définit si on attaque au CàC
@@ -487,9 +513,10 @@ export async function rollAttack(actor, weapon) {
         }
     }
     
+    // Calcul final de la réussite d'attaque
     const total = deArgyropee + compValeur + result.metierBonus + result.viser + result.autreBonus + malusGlobal + bonusCibleATerre + bonusMagiqueAttaque;
     
-    // On part de la base de l'arme (ex: "1d8")
+    // Construction de la chaîne de dés de dégâts (ex: "1d8 + 2 + 1d6")
     let finalDamage = baseDamage; 
     
     // S'il y a un bonus fixe (ex: +2), on l'ajoute proprement avec un " + "
@@ -498,7 +525,6 @@ export async function rollAttack(actor, weapon) {
     }
     
     // S'il y a des dés bonus (ex: " + 1d6"), on les ajoute à la suite
-    // (Rappel : notre code précédent incluait déjà le " + " dans la variable desMagiquesDegats)
     if (desMagiquesDegats !== "") {
         finalDamage += desMagiquesDegats;
     }
@@ -507,6 +533,7 @@ export async function rollAttack(actor, weapon) {
     if (total >= 15) {
         reussiteLabel = "RÉUSSITE CRITIQUE !"; cssClass = "crit-success";
         
+        // Règle du critique: Double le nombre de dés (ex: 1d6 devient 2d6)
         let doubleDamage = finalDamage.replace(/^(\d+)d(\d+)/i, (match, dCount, dFaces) => `${parseInt(dCount) * 2}d${dFaces}`);
         degatsHtml = `
           <div class="roll-result-box" style="border-color: darkgreen;">
@@ -533,7 +560,6 @@ export async function rollAttack(actor, weapon) {
                 ${result.autreBonus ? `<br>+ ${result.autreBonus} (Autre)` : ''}
                 ${pnjRollDetails}
                 ${malusGlobal < 0 ? `<br><span style="color: darkred;">${malusGlobal} (États)</span>` : ''}
-                ${modificateurCategorie !== 0 ? `<br><span style="color: darkmagenta; font-weight: bold;">${modificateurCategorie > 0 ? '+' : ''}${modificateurCategorie} (Catégorie ${categorieArme})</span>` : ''}
                 ${messageATerre}
             </div>
             <div class="roll-result-box">
@@ -549,10 +575,15 @@ export async function rollAttack(actor, weapon) {
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: actor }), content: chatContent, rolls: [roll] });
 }
 
+/**
+ * Lance un sortilège, déduit le Panache et prépare l'application de ses effets.
+ * @param {ArgyropeeActor} actor - L'enchanteur.
+ * @param {Item} spell - Le sortilège casté.
+ */
 export async function castSpell(actor, spell) {
     const panacheActuel = actor.system.panache.value;
     const costNormal = spell.system.cost || 1;
-    const costDiscreet = costNormal + 1;
+    const costDiscreet = costNormal + 1; // Règle d'Argyropée : Discrétion = +1 pt de Panache
     
     if ( panacheActuel < costNormal ) { ui.notifications.warn(`Pas assez de Panache (${panacheActuel}) !`); return; }
     
@@ -585,6 +616,7 @@ export async function castSpell(actor, spell) {
     const modeLabel = result === "discreet" ? `<br><i>(Lancement Discret)</i>` : "";
     const resistText = spell.system.resist ? `<div style="color: darkred; font-weight: bold; margin-top: 5px;">Jet de Résistance permis</div>` : "";
     
+    // Génération des boutons d'application d'effets (seulement ceux non transférés au lanceur)
     const activeEffects = spell.effects.filter(e => !e.transfer);
     let effectsHtml = "";
     if (activeEffects.length > 0) {
@@ -642,6 +674,11 @@ export async function castSpell(actor, spell) {
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: actor }), content: chatContent });
 }
 
+/**
+ * Consomme un objet (Potion, Drogue, Poison) et en tire les bénéfices (Soin ou Purge).
+ * @param {ArgyropeeActor} actor - L'utilisateur de l'objet.
+ * @param {Item} item - Le consommable.
+ */
 export async function consumeItem(actor, item) {
     const currentQty = item.system.quantity || 0;
     if (currentQty <= 0) { ui.notifications.warn(`Vous n'avez plus de ${item.name} en stock !`); return; }
@@ -651,6 +688,8 @@ export async function consumeItem(actor, item) {
     let statusesToCure = [];
     let effectsToApply = [];
     
+    // ARCHITECTURE : Lit les effets pour trouver s'il s'agit d'une potion de soin (flags.argyropee.heal) 
+    // ou d'un antidote (flags.argyropee.cureStatus), et prépare les autres effets (ex: buff).
     for (let e of item.effects) {
         let isInstant = false;
         e.changes.forEach(c => {
@@ -713,6 +752,11 @@ export async function consumeItem(actor, item) {
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: actor }), content: chatContent });
 }
 
+/**
+ * Pose un piège sur le terrain, affichant ses boutons de dégâts/effets pour le MJ.
+ * @param {ArgyropeeActor} actor - Le poseur.
+ * @param {Item} trap - Le piège.
+ */
 export async function deployTrap(actor, trap) {
     if (trap.system.quantity <= 0) { ui.notifications.warn(`Plus de ${trap.name} en réserve !`); return; }
     
@@ -743,6 +787,10 @@ export async function deployTrap(actor, trap) {
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: actor }), content: chatContent });
 }
 
+/**
+ * Effectue un repos (récupération de Santé et/ou Panache).
+ * @param {ArgyropeeActor} actor - L'acteur qui se repose.
+ */
 export async function rest(actor) {
     const maxHealth = Number(actor.system.santeMax) || 0;
     const currentHealth = Number(actor.system.sante?.value) || 0;
@@ -842,9 +890,10 @@ export async function rest(actor) {
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: actor }), content: chatContent, rolls: roll ? [roll] : null });
 }
 
-// ==========================================
-// SE DÉGAGER D'UN AGRIPPEMENT
-// ==========================================
+/**
+ * Tente de se libérer de l'état "Agrippé" par un jet d'opposition.
+ * @param {ArgyropeeActor} actor - L'acteur qui tente de s'évader.
+ */
 export async function escapeGrapple(actor) {
     // 1. L'effet est-il bien présent ?
     const grappleEffect = actor.effects.find(e => e.statuses?.has("agrippe"));

@@ -1,3 +1,12 @@
+/**
+ * Fichier principal d'initialisation du système Argyropée.
+ * @module argyropee
+ * * ARCHITECTURE :
+ * Ce fichier configure le système (DataModels, Sheets, Status Effects) lors du chargement
+ * et contient tous les "Hooks" (écouteurs d'événements) pour l'automatisation du monde
+ * (gestion des tours de combat, destruction d'objets, système anti-mort).
+ */
+
 import { ArgyropeeActor } from "./documents/actor.mjs";
 import ArgyropeeActorSheet from "./sheets/actor-sheet.mjs";
 import CitizenshipSheet from "./sheets/citizenship-sheet.mjs";
@@ -27,11 +36,19 @@ import {
   ArgyropeeNPCData
 } from "./data-models.mjs";
 
-// Enregistrement des helpers Handlebars personnalisés
+// ==========================================
+// HELPERS & CONSTANTES
+// ==========================================
+
+/** Helper Handlebars basique pour additionner deux valeurs dans les templates HTML */
 Handlebars.registerHelper('add', function(a, b) {
   return a + b;
 });
-// Intitulé compétences
+
+/** * Dictionnaire central du système.
+ * DEV : La section 'categories' est cruciale car c'est elle qui permet d'appliquer
+ * les malus globaux (ex: flags.argyropee.modificateurs.physique) aux bonnes compétences.
+ */
 const ARGYROPEE = {
   competences: {
     agilite: "Agilité",
@@ -104,8 +121,14 @@ const ARGYROPEE = {
   }
 };
 
-// --- CLASSE DE COMBAT PERSONNALISÉE ---
-// Force le Combat Tracker à utiliser notre carte de chat pour l'initiative
+// ==========================================
+// CLASSES PERSONNALISÉES
+// ==========================================
+
+/**
+ * Extension du Combat Tracker de Foundry.
+ * Redirige le jet d'initiative natif vers notre propre méthode rollArgyropeeInitiative().
+ */
 class ArgyropeeCombat extends Combat {
   async rollInitiative(ids, options={}) {
     // Le tracker peut envoyer un seul ID (clic sur un dé) ou plusieurs (Lancer Tout)
@@ -122,15 +145,19 @@ class ArgyropeeCombat extends Combat {
   }
 }
 
+// ==========================================
+// INITIALISATION DE FOUNDRY
+// ==========================================
+
 Hooks.once("init", async() => {
   console.log("Argyropée | Initialisation du système...");
   //Chargement des compétences
   CONFIG.ARGYROPEE = ARGYROPEE;
   
-  // --- NOUVEAUTÉ : On remplace le système de combat par défaut ---
+  // Configuration du combat et de la formule d'initiative par défaut
   CONFIG.Combat.documentClass = ArgyropeeCombat;
   
-  // --- NOUVEAUTÉ : Configuration de l'initiative native ---
+  // Configuration de l'initiative native
   CONFIG.Combat.initiative = {
     formula: "(1d10 % 10) + @initiativeFinale",
     decimals: 0
@@ -159,7 +186,7 @@ Hooks.once("init", async() => {
     "maladie": DiseaseData
   };
   
-  // Enregistrement de la fiche de personnage
+  // Enregistrement des fiches d'Acteurs
   DocumentSheetConfig.registerSheet(Actor, "argyropee", ArgyropeeActorSheet, {
     types: ["character"],
     makeDefault: true,
@@ -238,6 +265,8 @@ Hooks.once("init", async() => {
   // ==========================================
   // ÉTATS PRÉJUDICIABLES D'ARGYROPÉE
   // ==========================================
+  // DEV : C'est ici que vous pouvez ajouter de nouveaux statuts. 
+  // Les clés utilisées ici communiquent directement avec actor.mjs pour moduler les compétences.
   CONFIG.statusEffects = [
     { id: "a_terre", name: "À terre", img: "systems/argyropee/css/assets/icones/argyropee_icones_a-terre.webp" }, // Automatisé
     { id: "affame", name: "Affamé", img: "systems/argyropee/css/assets/icones/argyropee_icones_affamé.webp" }, // Automatisé - Macro MJ pour augmenter le niveau de Faim
@@ -270,7 +299,7 @@ Hooks.once("init", async() => {
         { key: "flags.argyropee.modificateurs.physique", mode: 2, value: "-4" },
         { key: "flags.argyropee.modificateurs.intellectuelle", mode: 2, value: "-4" },
         { key: "flags.argyropee.cantRun", mode: 5, value: "true"}
-      ] // [cite: 410]
+      ]
     },
     { 
       id: "fatigue", name: "Fatigué", img: "systems/argyropee/css/assets/icones/argyropee_icones_fatigué.webp", // Automatisé
@@ -314,14 +343,14 @@ Hooks.once("init", async() => {
     }
   ];
   
-  // Lier les statuts spéciaux du moteur Foundry à vos propres statuts
+  // Remplacement des overlays de base de Foundry
   CONFIG.specialStatusEffects.DEFEATED = "mort";
   CONFIG.specialStatusEffects.BLIND = "aveugle";
   
   // Préchargement des Partials Handlebars
   const templatePaths = [
     "systems/argyropee/templates/actor-nav.hbs"
-    // Tu pourras ajouter d'autres partials ici plus tard (ex: item-card.hbs, etc.)
+    // Ajout possible d'autres partials ici plus tard (ex: item-card.hbs, etc.)
   ];
   await loadTemplates(templatePaths);
   console.log("Argyropée | Système prêt !");
@@ -332,8 +361,13 @@ Hooks.on("renderChatLog", (app, html, data) => {
 });
 
 // ==========================================
-// DESTRUCTION AUTOMATIQUE DES OBJETS VIDES
+// HOOKS DU SYSTÈME (AUTOMATISATION)
 // ==========================================
+
+/**
+ * Écoute la mise à jour d'un objet.
+ * Utilisé pour détruire automatiquement l'objet si sa quantité tombe à 0 ou moins.
+ */
 Hooks.on("updateItem", async (item, changes, options, userId) => {
   // 1. On s'assure que c'est bien le joueur actuel qui a fait la modification
   if (game.user.id !== userId) return;
@@ -353,9 +387,10 @@ Hooks.on("updateItem", async (item, changes, options, userId) => {
   }
 });
 
-// ==========================================
-// 2. AUTOMATISATION DU COMBAT (Expiration et Dégâts Continus)
-// ==========================================
+/**
+ * Déclenché à chaque changement de tour dans le Combat Tracker.
+ * Gère les durées personnalisées, les dégâts continus, l'agrippement et la nausée.
+ */
 Hooks.on("combatTurnChange", async (combat, prior, current) => {
   if (!game.user.isGM) return;
   
@@ -470,7 +505,6 @@ Hooks.on("combatTurnChange", async (combat, prior, current) => {
   }
   
   // --- D. GESTION DE L'ÉTAT NAUSÉEUX ---
-  // Attention à bien vérifier l'ID de ton état (nauseeux, nauséeux, etc.)
   const isNauseeux = actor.statuses.has("nauseeux") || actor.statuses.has("nauséeux");
   
   if (isNauseeux) {
@@ -573,9 +607,10 @@ Hooks.on("combatTurnChange", async (combat, prior, current) => {
   }
 });
 
-// ==========================================
-// NETTOYAGE DES ÉTATS (Faim, Soif, etc.)
-// ==========================================
+/**
+ * Nettoyage lors de la suppression d'un effet.
+ * Ex: Retrait de drapeaux spécifiques ou remise à zéro de la Santé Temporaire.
+ */
 Hooks.on("deleteActiveEffect", async (effect, options, userId) => {
   // Seul le MJ fait le nettoyage pour éviter les doublons
   if (!game.user.isGM) return;
@@ -587,9 +622,8 @@ Hooks.on("deleteActiveEffect", async (effect, options, userId) => {
   if (effect.statuses.has("assoiffe")) {
     await effect.parent.unsetFlag("argyropee", "malusSoif");
   }
-  // ==========================================
-  // CHANTIER 6 : SANTÉ TEMPORAIRE (Suppression)
-  // ==========================================
+  
+  // SANTÉ TEMPORAIRE (Suppression)
   if (effect.getFlag("argyropee", "grantedTemp")) {
       const isPC = effect.parent.type === "character";
       const tempPath = isPC ? "system.sante.temp" : "system.health.temp";
@@ -602,9 +636,9 @@ Hooks.on("deleteActiveEffect", async (effect, options, userId) => {
   }
 });
 
-// ==========================================
-// NETTOYAGE DES EFFETS HORS COMBAT (Temps du Monde)
-// ==========================================
+/**
+ * Gère l'expiration des effets magiques ou d'états *en dehors* du combat.
+ */
 Hooks.on("updateWorldTime", async (worldTime, dt) => {
   if (!game.user.isGM) return;
   
@@ -620,9 +654,11 @@ Hooks.on("updateWorldTime", async (worldTime, dt) => {
   }
 });
 
-// ==========================================
-// 1. INJECTION DES DONNÉES À LA CRÉATION D'UN EFFET
-// ==========================================
+/**
+ * Intercepte la création d'un effet pour calculer des valeurs dynamiques
+ * (ex: lancer les dés pour savoir combien de tours on est "Secoué" ou "Aveuglé",
+ * ou encore évaluer la formule de Santé Temporaire accordée par un sort).
+ */
 Hooks.on("createActiveEffect", async (effect, options, userId) => {
   // Seul le joueur qui crée l'effet gère cette partie
   if (game.user.id !== userId) return;
@@ -672,7 +708,7 @@ Hooks.on("createActiveEffect", async (effect, options, userId) => {
     });
   }
   // ==========================================
-  // CHANTIER 6 : SANTÉ TEMPORAIRE (Création)
+  // SANTÉ TEMPORAIRE
   // ==========================================
   const tempHpChange = effect.changes.find(c => c.key === "flags.argyropee.santeTemp");
   
@@ -706,9 +742,9 @@ Hooks.on("createActiveEffect", async (effect, options, userId) => {
   }
 });
 
-// ==========================================
-// 3. RÉCEPTION DES GABARITS DE SORTS (Drag & Drop)
-// ==========================================
+/**
+ * Gère le Drag & Drop des gabarits magiques depuis le chat vers la carte.
+ */
 Hooks.on("dropCanvasData", async (canvas, data) => {
   // On vérifie si ce qu'on lâche est bien notre gabarit de sort
   if (data.type === "MeasuredTemplate") {
@@ -734,10 +770,14 @@ Hooks.on("dropCanvasData", async (canvas, data) => {
 });
 
 // ==========================================
-// 4. INTERCEPTEUR DE MORT (ANTI-MORT)
+// SYSTÈME ANTI-MORT (Miracle Magique)
 // ==========================================
 
-// 1. On intercepte la modification AVANT qu'elle ne soit sauvegardée
+/**
+ * Étape 1 : Interception des données de santé *avant* sauvegarde.
+ * Si le personnage doit tomber à 0 PV ou moins, on regarde s'il a le flag "antiMort".
+ * Si oui, on bloque mathématiquement la descente à 0.
+ */
 Hooks.on("preUpdateActor", (actor, changes, options, userId) => {
   // Seul le joueur ou MJ qui déclenche la perte de PV fait le calcul
   if (game.user.id !== userId) return;
@@ -765,7 +805,10 @@ Hooks.on("preUpdateActor", (actor, changes, options, userId) => {
   }
 });
 
-// 2. On déclenche l'événement APRÈS la sauvegarde
+/**
+ * Étape 2 : Résolution après sauvegarde.
+ * Si l'étape 1 a déclenché l'Anti-Mort, on consomme l'effet magique et on affiche un message épique.
+ */
 Hooks.on("updateActor", async (actor, changes, options, userId) => {
   if (game.user.id !== userId) return;
   
@@ -783,7 +826,7 @@ Hooks.on("updateActor", async (actor, changes, options, userId) => {
       if (actor.statuses.has("inconscient")) await actor.toggleStatusEffect("inconscient", { active: false });
       if (actor.statuses.has("mort")) await actor.toggleStatusEffect("mort", { active: false });
       
-      // 3. On affiche un message épique pour la table !
+      // 3. On affiche un message pour la table !
       ChatMessage.create({
         speaker: ChatMessage.getSpeaker({ actor: actor }),
         content: `

@@ -8,6 +8,9 @@ export default class WeaponSheet extends ArgyropeeItemSheet {
       setTab: WeaponSheet.#onSetTab,
       editImage: WeaponSheet.#onEditImage
     },
+    window: {
+        resizable: true // Permet de redimensionner pour voir le scroll
+    },
     form: { submitOnChange: true, closeOnSubmit: false }
   };
 

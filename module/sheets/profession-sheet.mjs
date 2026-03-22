@@ -1,12 +1,24 @@
+/**
+ * Fiche d'Item personnalisée pour les Métiers (Profession).
+ * @module profession-sheet
+ * * ARCHITECTURE :
+ * Hérite de ArgyropeeItemSheet (et donc d'ApplicationV2).
+ * Calcule dynamiquement les compétences bonus disponibles en fonction de 
+ * la catégorie de métier choisie par le joueur/MJ.
+ */
+
 import ArgyropeeItemSheet from "./item-sheet.mjs";
 
 export default class ProfessionSheet extends ArgyropeeItemSheet {
   static DEFAULT_OPTIONS = {
     classes: ["argyropee", "sheet", "item", "profession"],
-    position: { width: 480, height: 550 },
+    position: { width: 500, height: 600 },
     actions: {
       setTab: ProfessionSheet.#onSetTab,
       editImage: ProfessionSheet.#onEditImage
+    },
+    window: {
+        resizable: true // Permet de redimensionner pour voir le scroll
     },
     form: { 
       submitOnChange: true,
@@ -17,8 +29,8 @@ export default class ProfessionSheet extends ArgyropeeItemSheet {
   static PARTS = {
     header: { template: "systems/argyropee/templates/item-header.hbs" },
     body: { 
-        template: "systems/argyropee/templates/item-profession.hbs",
-        scrollable: [".sheet-body"] 
+      template: "systems/argyropee/templates/item-profession.hbs",
+      scrollable: [".sheet-body"] 
     }
   };
 

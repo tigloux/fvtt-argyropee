@@ -1,21 +1,34 @@
 /**
- * Fiche d'acteur principale pour Argyropée utilisant ApplicationV2
+ * Fiche de Personnage Joueur principale (PJ) d'Argyropée.
+ * @module actor-sheet
+ * * ARCHITECTURE :
+ * Utilise la nouvelle API `ApplicationV2` de Foundry (Standard V13+).
+ * Ce fichier gère :
+ * - Le tri et l'affichage des données dans les templates Handlebars (`_prepareContext`).
+ * - L'écoute des actions de clics sur la fiche (méthode `actions:` et `#on...`).
+ * - La persistance de l'état visuel (comme la position de la barre de défilement).
  */
+
 export default class ArgyropeeActorSheet extends foundry.applications.api.HandlebarsApplicationMixin(
   foundry.applications.sheets.ActorSheetV2
 ) {
   
-  // 1. Ajout du constructeur pour l'onglet par défaut
+  /**
+   * Constructeur de la fiche. Définit l'onglet ouvert par défaut.
+   */
   constructor(options={}) {
     super(options);
     this.tabGroups = { primary: "competences" };
   }
 
+  /**
+   * Configuration de base de la fenêtre ApplicationV2.
+   */
   static DEFAULT_OPTIONS = {
     tag: "form",
     classes: ["argyropee", "sheet", "actor"],
     position: { width: 1000, height: 700 },
-    // Cette option indique à Foundry de surveiller le scroll dans ces sélecteurs
+    // DEV : Cette option indique à Foundry de surveiller le scroll dans ces sélecteurs
     scrollY: [".sheet-body"],
     window: {
         resizable: true // Permet de redimensionner pour voir le scroll
@@ -25,6 +38,7 @@ export default class ArgyropeeActorSheet extends foundry.applications.api.Handle
       closeOnSubmit: false
     }, 
     actions: {
+      // --- DÉCLARATION DES ACTIONS DE L'INTERFACE ---
       rollComp: ArgyropeeActorSheet.#onRollComp,
       // ACTION POUR L'INITIATIVE
       rollInitiative: async function(event, target) {
@@ -34,6 +48,11 @@ export default class ArgyropeeActorSheet extends foundry.applications.api.Handle
       // ACTION POUR LE REPOS
       rest: ArgyropeeActorSheet.#onRest,
 
+      /**
+       * Action Complexe : Modifie le score de base d'une compétence (Ajustement de Jeton).
+       * @devNote Empêche le joueur de baisser son score "Total" en dessous de la valeur 
+       * accordée par ses bonus (Métier, Citoyenneté, Magie).
+       */
       setSkill: async function(event, target) {
           event.preventDefault();
           event.stopPropagation();
@@ -126,7 +145,10 @@ export default class ArgyropeeActorSheet extends foundry.applications.api.Handle
     return this.document.name;
   }
 
-  // 3. NOUVELLES MÉTHODES STATIQUES (à ajouter)
+  // ==========================================
+  // MÉTHODES D'ACTIONS INTERNES (Liées à `actions:`)
+  // ==========================================
+
   static #onSetTab(event, target) {
     const tab = target.dataset.tab;
     const group = target.dataset.group;
@@ -240,7 +262,15 @@ export default class ArgyropeeActorSheet extends foundry.applications.api.Handle
     }
   }
 
-  /** @override */
+  // ==========================================
+  // PRÉPARATION DES DONNÉES (Pour Handlebars)
+  // ==========================================
+
+  /**
+   * Construit l'objet `context` qui sera envoyé au fichier `.hbs` pour générer le HTML.
+   * C'est ici que l'on trie les objets et que l'on calcule les couleurs des jetons.
+   * @override
+   */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     // 1. Définition de l'onglet actif
@@ -322,6 +352,7 @@ export default class ArgyropeeActorSheet extends foundry.applications.api.Handle
     }
 
     // --- MOTEUR DE COULEURS DES COMPÉTENCES ---
+    // ARCHITECTURE : Détermine d'où vient chaque point pour attribuer la bonne classe CSS
     context.skillsData = {};
     if (this.document.type === "character") {
       for (const [key, label] of Object.entries(CONFIG.ARGYROPEE.competences)) {
@@ -464,8 +495,14 @@ export default class ArgyropeeActorSheet extends foundry.applications.api.Handle
     return this.document.rest();
   }
 
-  //Conservation de la position du scroll
-  /** @override */
+  // ==========================================
+  // PERSISTANCE ET SAUVEGARDE
+  // ==========================================
+
+  /**
+   * Conservation de la position du scroll lors des re-rendus.
+   * @override
+   */
   _onRender(context, options) {
     super._onRender(context, options);
 
@@ -485,7 +522,11 @@ export default class ArgyropeeActorSheet extends foundry.applications.api.Handle
     }
   }
 
-  /** @override */
+  /**
+   * Intercepte la sauvegarde du formulaire.
+   * C'est ici qu'on bloque les PS s'ils dépassent le maximum autorisé.
+   * @override
+   */
   _onChangeForm(event, formConfig) {
     super._onChangeForm(event, formConfig);
 

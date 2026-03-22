@@ -1,5 +1,18 @@
+/**
+ * Fichier gérant l'interactivité du journal de discussion (Chat) d'Argyropée.
+ * @module chat-listeners
+ * * ARCHITECTURE :
+ * Ce fichier écoute les clics sur les boutons générés par `dice.mjs` dans le chat.
+ * C'est ici que sont résolus : l'application des dégâts (avec gestion d'armure),
+ * l'utilisation du Panache après un jet, et le nettoyage des états expirés.
+ */
+
 import { escapeGrapple } from "./dice.mjs";
 
+/**
+ * Attache les écouteurs d'événements au journal de chat de Foundry VTT.
+ * @param {HTMLElement|jQuery} html - L'élément DOM du chat (Gère la compatibilité jQuery V11/V12 vers DOM natif V13+).
+ */
 export async function addChatListeners(html) {
     // Sécurité V13 : si html est un tableau (jQuery fallback), on prend le premier élément natif
     const chatElement = html.length ? html[0] : html;
@@ -9,6 +22,7 @@ export async function addChatListeners(html) {
         // ==========================================
         // 0. APPLIQUER UN EFFET (SORT, MUNITION, POISON)
         // ==========================================
+        // DEV : Bouton généré quand une munition, un sort ou un piège a des effets non-transférés.
         const spellBtn = ev.target.closest('button[data-action="applySpellEffect"]');
         if (spellBtn) {
             ev.preventDefault();
@@ -52,9 +66,7 @@ export async function addChatListeners(html) {
                 return;
             }
             
-            // ==========================================
             // 6. APPLICATION OU SOIN D'URGENCE (PURGE)
-            // ==========================================
             let statusesToCure = [];
             let isInstantPurge = false;
 
@@ -110,12 +122,12 @@ export async function addChatListeners(html) {
                 }
             }
             
-            return; // On arrête l'exécution ici pour ce clic
+            return;
             
         }
         
         // ==========================================
-        // 1. LANCER LES DÉGÂTS
+        // 1. LANCER LES DÉGÂTS (Création de la boîte de dégâts)
         // ==========================================
         const damageBtn = ev.target.closest('button[data-action="rollDamage"]');
         if (damageBtn) {
@@ -151,8 +163,10 @@ export async function addChatListeners(html) {
         }
         
         // ==========================================
-        // 2. ENCAISSER LES DÉGÂTS
+        // 2. ENCAISSER LES DÉGÂTS (Résolution sur la cible)
         // ==========================================
+        // ARCHITECTURE : C'est ici que l'armure (X et Y) et la Santé Temporaire sont calculées
+        // avant d'entamer les vrais Points de Santé du personnage ciblé.
         const applyBtn = ev.target.closest('button[data-action="applyDamage"]');
         if (applyBtn) {
             ev.preventDefault();
@@ -252,6 +266,7 @@ export async function addChatListeners(html) {
         // ==========================================
         // 3. ANNULER LES DÉGÂTS (Undo)
         // ==========================================
+        // DEV : Restaurera les points de vie, la santé temporaire et la structure (Y) de l'armure.
         const undoBtn = ev.target.closest('button[data-action="undoDamage"]');
         if (undoBtn) {
             ev.preventDefault();
@@ -289,8 +304,10 @@ export async function addChatListeners(html) {
         }
         
         // ==========================================
-        // 4. LOGIQUE DU PANACHE 
+        // 4. LOGIQUE DU PANACHE (Dépense Post-Jet)
         // ==========================================
+        // ARCHITECTURE : Permet au joueur de booster un dé raté après coup.
+        // Ouvre une modale pour choisir combien de points dépenser, puis déclenche `executePanacheRoll()`.
         const panacheBtn = ev.target.closest('.burn-panache');
         if (panacheBtn) {
             ev.preventDefault();
@@ -336,7 +353,7 @@ export async function addChatListeners(html) {
         }
         
         // ==========================================
-        // RETIRER UN EFFET EXPIRÉ (Bouton de chat)
+        // 5. RETIRER UN EFFET EXPIRÉ (Bouton d'alerte chat)
         // ==========================================
         const removeEffectBtn = ev.target.closest('button[data-action="removeExpiredEffect"]');
         if (removeEffectBtn) {
@@ -380,7 +397,7 @@ export async function addChatListeners(html) {
         }
 
         // ==========================================
-        // SE LIBÉRER D'UN AGRIPPEMENT (Bouton auto du chat)
+        // 6. SE LIBÉRER D'UN AGRIPPEMENT (Bouton d'alerte chat)
         // ==========================================
         const escapeBtn = ev.target.closest('button[data-action="escapeGrapple"]');
         if (escapeBtn) {
@@ -400,7 +417,7 @@ export async function addChatListeners(html) {
     });
 
     // ==========================================
-    // GESTION DU DRAG & DROP DES GABARITS DE SORTS
+    // 7. GESTION DU DRAG & DROP (Gabarits de sorts magiques)
     // ==========================================
     chatElement.addEventListener('dragstart', (ev) => {
         // On vérifie si l'élément qu'on attrape est bien notre boîte de gabarit
@@ -426,9 +443,16 @@ export async function addChatListeners(html) {
     });
 }
 
+// ==========================================
+// FONCTIONS INTERNES 
+// ==========================================
+
 /**
-* Calcule le nouveau résultat et crée un second message (Gère Compétences ET Attaques)
-*/
+ * Calcule le nouveau résultat après l'ajout de Panache et crée un second message (Gère Compétences ET Attaques).
+ * @param {ArgyropeeActor} actor - L'acteur qui a dépensé le panache.
+ * @param {HTMLElement} messageDiv - L'élément HTML du message d'origine (pour y lire le dé et le total).
+ * @param {number} points - Le nombre de points de panache dépensés.
+ */
 async function executePanacheRoll(actor, messageDiv, points) {
     await actor.update({"system.panache.value": actor.system.panache.value - points});
     

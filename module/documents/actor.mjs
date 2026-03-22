@@ -1,3 +1,13 @@
+/**
+ * Document d'Acteur personnalisé pour Argyropée.
+ * @module actor
+ * * ARCHITECTURE :
+ * Cette classe étend l'Acteur natif de Foundry. Elle a deux rôles :
+ * 1. Préparer les données dérivées (calculées à la volée, non sauvegardées en base) pour l'affichage.
+ * 2. Servir de relais (routeur) : quand on clique sur un bouton de la fiche, l'Acteur 
+ * intercepte l'appel et le transmet au moteur central 'dice.mjs'.
+ */
+
 import * as Dice from "../helpers/dice.mjs"; // On importe notre super moteur de dés !
 
 /**
@@ -5,7 +15,11 @@ import * as Dice from "../helpers/dice.mjs"; // On importe notre super moteur de
  */
 export class ArgyropeeActor extends Actor {
 
-  /** @override */
+  /**
+   * Méthode native de Foundry appelée à chaque mise à jour des données de l'acteur.
+   * Prépare les données pour l'affichage avant le rendu de la fiche.
+   * @override
+   */
   prepareDerivedData() {
     // 1. On laisse Foundry préparer les données de base de l'acteur
     super.prepareDerivedData();
@@ -37,6 +51,10 @@ export class ArgyropeeActor extends Actor {
       }
     }
   }
+  
+  // ==========================================
+  // RELAIS DES ACTIONS VERS LE MOTEUR DE DÉS
+  // ==========================================
   
   /** Calcule le Panache pour la journée */
   async asyncRefreshPanache() {

@@ -1,5 +1,23 @@
+/**
+ * Fichier définissant l'architecture de la base de données (DataModels) d'Argyropée.
+ * @module data-models
+ * * ARCHITECTURE :
+ * Utilise l'API TypeDataModel de Foundry (V11+). Ces classes définissent les champs 
+ * stricts enregistrés dans la base de données pour chaque type d'Acteur et d'Item.
+ * La méthode `prepareDerivedData()` calcule les valeurs temporaires (Santé Max, Initiative)
+ * à chaque ouverture ou modification de la fiche.
+ */
+
 const fields = foundry.data.fields;
 
+// ==========================================
+// MODÈLES DE DONNÉES DES ACTEURS
+// ==========================================
+
+/**
+ * Modèle de données pour un Personnage Joueur (PJ).
+ * Contient les 32 compétences sous forme de valeurs (0 à 7).
+ */
 export class ArgyropeeActorData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
@@ -87,7 +105,10 @@ export class ArgyropeeActorData extends foundry.abstract.TypeDataModel {
   }
 
   /**
-   * Calculs dérivés (Automatisations basées sur le PDF)
+   * Calculs dérivés (Automatisations basées sur les règles d'Argyropée).
+   * ARCHITECTURE : Cette fonction n'écrase pas les données en base, elle les calcule
+   * dynamiquement (Armure, Initiative, Santé Max) pour l'affichage de la feuille
+   * et l'utilisation par les jets de dés.
    */
   prepareDerivedData() {
     const actor = this.parent;
@@ -108,8 +129,7 @@ export class ArgyropeeActorData extends foundry.abstract.TypeDataModel {
                 this.competences[skillKey] += 1;
             }
             
-            // On peut aussi stocker le bonus de rang (1-5) 
-            // pour l'afficher ou l'utiliser dans les jets plus tard
+            // Stocker le bonus de rang (1-5) 
             item.professionBonus = item.system.rank;
         }
 
@@ -148,6 +168,11 @@ export class ArgyropeeActorData extends foundry.abstract.TypeDataModel {
     this.initiativeFinale = this.initiativeBase;
   }
 }
+
+// ==========================================
+// MODÈLES DE DONNÉES DES OBJETS (ITEMS)
+// ==========================================
+
 // --- 1. Citoyenneté ---
 export class CitizenshipData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -282,7 +307,27 @@ export class TrapData extends foundry.abstract.TypeDataModel {
   }
 }
 
-// --- FONCTION UTILITAIRE POUR LES COMPÉTENCES DES PNJS/MONSTRES ---
+// --- 8. Maladie ---
+export class DiseaseData extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    const fields = foundry.data.fields;
+    return {
+      description: new fields.HTMLField({ initial: "" }),
+      origin: new fields.StringField({ initial: "Naturelle" }), // "Naturelle" ou "Magique"
+      testsRequired: new fields.NumberField({ initial: 3, min: 1, integer: true }),
+      testsPassed: new fields.NumberField({ initial: 0, min: 0, integer: true }),
+      remedyRequired: new fields.BooleanField({ initial: false }),
+      treatment: new fields.StringField({ initial: "" }) // Description du remède
+    };
+  }
+}
+
+/**
+ * Fonction utilitaire générant le schéma des compétences pour PNJs/Monstres.
+ * DEV : Contrairement aux PJs qui ont des scores, les PNJ ont de simples cases à cocher (Booléens)
+ * pour signifier s'ils sont "Privilégiés" ou non dans une compétence.
+ * @returns {Object} Schéma de champs booléens.
+ */
 function getPnjSkillSchema() {
     const fields = foundry.data.fields;
     const skills = {};
@@ -299,7 +344,7 @@ function getPnjSkillSchema() {
     return skills;
 }
 
-// --- 8. Personnage Non-Joueur (Humain) ---
+// --- Personnage Non-Joueur (Humain) ---
 export class ArgyropeeNPCData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
@@ -323,7 +368,7 @@ export class ArgyropeeNPCData extends foundry.abstract.TypeDataModel {
   }
 }
 
-// --- 9. Monstre / Créature / Animal ---
+// --- Monstre / Créature / Animal ---
 export class ArgyropeeMonsterData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
@@ -344,21 +389,6 @@ export class ArgyropeeMonsterData extends foundry.abstract.TypeDataModel {
       environment: new fields.StringField({ initial: "" }),
       weaknesses: new fields.StringField({ initial: "" }),
       isSwarm: new fields.BooleanField({ initial: false })
-    };
-  }
-}
-
-// --- 10. Maladie ---
-export class DiseaseData extends foundry.abstract.TypeDataModel {
-  static defineSchema() {
-    const fields = foundry.data.fields;
-    return {
-      description: new fields.HTMLField({ initial: "" }),
-      origin: new fields.StringField({ initial: "Naturelle" }), // "Naturelle" ou "Magique"
-      testsRequired: new fields.NumberField({ initial: 3, min: 1, integer: true }),
-      testsPassed: new fields.NumberField({ initial: 0, min: 0, integer: true }),
-      remedyRequired: new fields.BooleanField({ initial: false }),
-      treatment: new fields.StringField({ initial: "" }) // Description du remède
     };
   }
 }
