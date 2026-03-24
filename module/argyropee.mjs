@@ -268,33 +268,33 @@ Hooks.once("init", async() => {
   // DEV : C'est ici que vous pouvez ajouter de nouveaux statuts. 
   // Les clés utilisées ici communiquent directement avec actor.mjs pour moduler les compétences.
   CONFIG.statusEffects = [
-    { id: "a_terre", name: "À terre", img: "systems/argyropee/css/assets/icones/argyropee_icones_a-terre.webp" }, // Automatisé
-    { id: "affame", name: "Affamé", img: "systems/argyropee/css/assets/icones/argyropee_icones_affamé.webp" }, // Automatisé - Macro MJ pour augmenter le niveau de Faim
-    { id: "assoiffe", name: "Assoiffé", img: "systems/argyropee/css/assets/icones/argyropee_icones_assoiffé.webp" }, // Automatisé - Macro MJ pour augmenter le niveau de Soif
-    { id: "agrippe", name: "Agrippé", img: "systems/argyropee/css/assets/icones/argyropee_icones_agrippé.webp" }, // Automatisé
+    { id: "a_terre", name: "À terre", img: "icons/svg/falling.svg" },
+    { id: "affame", name: "Affamé", img: "icons/svg/bones.svg" }, 
+    { id: "assoiffe", name: "Assoiffé", img: "icons/svg/degen.svg" },
+    { id: "agrippe", name: "Agrippé", img: "icons/svg/padlock.svg" },
     { 
-      id: "aveugle", name: "Aveuglé", img: "systems/argyropee/css/assets/icones/argyropee_icones_aveuglé.webp", // Automatisé
+      id: "aveugle", name: "Aveuglé", img: "icons/svg/blind.svg",
       // Active un drapeau pour signaler la cécité 
       changes: [{ key: "flags.argyropee.aveugle", mode: 5, value: "true" }] 
     },
     { 
-      id: "assourdi", name: "Assourdi", img: "systems/argyropee/css/assets/icones/argyropee_icones_assourdi.webp", // Automatisé
+      id: "assourdi", name: "Assourdi", img: "icons/svg/deaf.svg", // Automatisé
       // Active un drapeau pour signaler l'assourdissement'
       changes: [{ key: "flags.argyropee.assourdi", mode: 5, value: "true" }]
     },
-    { id: "brule", name: "Brûlé", img: "systems/argyropee/css/assets/icones/argyropee_icones_brulé.webp" }, // Automatisé
-    { id: "drogue", name: "Drogué", img: "systems/argyropee/css/assets/icones/argyropee_icones_drogué.webp" },
+    { id: "brule", name: "Brûlé", img: "icons/svg/fire.svg" }, // Automatisé
+    { id: "drogue", name: "Drogué", img: "icons/svg/pill.svg" },
     { 
-      id: "ebloui", name: "Ébloui", img: "systems/argyropee/css/assets/icones/argyropee_icones_aveuglé.webp", // Automatisé
+      id: "ebloui", name: "Ébloui", img: "icons/svg/sun.svg", // Automatisé
       changes: [{ key: "flags.argyropee.ebloui", mode: 5, value: "true" }] 
     },
-    { id: "effraye", name: "Effrayé", img: "systems/argyropee/css/assets/icones/argyropee_icones_effrayé.webp" },
-    { id: "empoisonne", name: "Empoisonné", img: "systems/argyropee/css/assets/icones/argyropee_icones_empoisonné.webp" },
+    { id: "effraye", name: "Effrayé", img: "icons/svg/terror.svg" },
+    { id: "empoisonne", name: "Empoisonné", img: "icons/svg/poison.svg" },
     { 
-      id: "enchevetre", name: "Enchevêtré", img: "systems/argyropee/css/assets/icones/argyropee_icones_enchevetré.webp",
+      id: "enchevetre", name: "Enchevêtré", img: "icons/svg/net.svg",
     },
     { 
-      id: "epuise", name: "Épuisé", img: "systems/argyropee/css/assets/icones/argyropee_icones_épuisé.webp", // Automatisé
+      id: "epuise", name: "Épuisé", img: "icons/svg/downgrade.svg", // Automatisé
       changes: [
         { key: "flags.argyropee.modificateurs.physique", mode: 2, value: "-4" },
         { key: "flags.argyropee.modificateurs.intellectuelle", mode: 2, value: "-4" },
@@ -302,23 +302,23 @@ Hooks.once("init", async() => {
       ]
     },
     { 
-      id: "fatigue", name: "Fatigué", img: "systems/argyropee/css/assets/icones/argyropee_icones_fatigué.webp", // Automatisé
+      id: "fatigue", name: "Fatigué", img: "icons/svg/sleep.svg", // Automatisé
       changes: [
         { key: "flags.argyropee.modificateurs.physique", mode: 2, value: "-2" },
         { key: "flags.argyropee.modificateurs.intellectuelle", mode: 2, value: "-2" },
         { key: "flags.argyropee.cantRun", mode: 5, value: "true"}
       ] 
     },
-    { id: "gele", name: "Gelé", img: "systems/argyropee/css/assets/icones/argyropee_icones_gelé.webp" }, // Automatisé
-    { id: "hemorragique", name: "Hémorragique", img: "systems/argyropee/css/assets/icones/argyropee_icones_hémorragique.webp" }, // Automatisé
-    { id: "inconscient", name: "Inconscient", img: "systems/argyropee/css/assets/icones/argyropee_icones_inconscient.webp" },
-    { id: "malade", name: "Malade", img: "systems/argyropee/css/assets/icones/argyropee_icones_malade.webp" },
-    { id: "mort", name: "Mort", img: "systems/argyropee/css/assets/icones/argyropee_icones_mort.webp" },
-    { id: "nauseeux", name: "Nauséeux", img: "systems/argyropee/css/assets/icones/argyropee_icones_nauséeux.webp" },
-    { id: "noye", name: "Noyé", img: "systems/argyropee/css/assets/icones/argyropee_icones_noyé.webp" },
-    { id: "paralyse", name: "Paralysé", img: "systems/argyropee/css/assets/icones/argyropee_icones_paralysé.webp" },
+    { id: "gele", name: "Gelé", img: "icons/svg/frozen.svg" }, // Automatisé
+    { id: "hemorragique", name: "Hémorragique", img: "icons/svg/blood.svg" }, // Automatisé
+    { id: "inconscient", name: "Inconscient", img: "icons/svg/unconscious.svg" },
+    { id: "malade", name: "Malade", img: "icons/svg/biohazard.svg" },
+    { id: "mort", name: "Mort", img: "icons/svg/skull.svg" },
+    { id: "nauseeux", name: "Nauséeux", img: "icons/svg/acid.svg" },
+    { id: "noye", name: "Noyé", img: "icons/svg/anchor.svg" },
+    { id: "paralyse", name: "Paralysé", img: "icons/svg/paralysis.svg" },
     { 
-      id: "saoul", name: "Saoul", img: "systems/argyropee/css/assets/icones/argyropee_icones_saoul.webp", // Automatisé
+      id: "saoul", name: "Saoul", img: "icons/svg/tankard.svg", // Automatisé
       changes: [
         { key: "flags.argyropee.modificateurs.physique", mode: 2, value: "-2" },
         { key: "flags.argyropee.modificateurs.intellectuelle", mode: 2, value: "-3" },
@@ -326,15 +326,15 @@ Hooks.once("init", async() => {
       ]
     },
     { 
-      id: "secoue", name: "Secoué", img: "systems/argyropee/css/assets/icones/argyropee_icones_secoué.webp", // Automatisé
+      id: "secoue", name: "Secoué", img: "icons/svg/daze.svg", // Automatisé
       changes: [{ key: "flags.argyropee.malusGlobal", mode: 2, value: "-2" }]
     },
     { 
-      id: "stresse", name: "Stressé", img: "systems/argyropee/css/assets/icones/argyropee_icones_stressé.webp",
+      id: "stresse", name: "Stressé", img: "icons/svg/hazard.svg",
       changes: [{ key: "flags.argyropee.malusGlobal", mode: 2, value: "-1" }] 
     },
     { 
-      id: "sevrage", name: "En Sevrage", img: "systems/argyropee/css/assets/icones/argyropee_icones_sevrage.webp",
+      id: "sevrage", name: "En Sevrage", img: "icons/svg/cancel.svg",
       changes: [
         { key: "flags.argyropee.malusGlobal", mode: 2, value: "-1" },
         { key: "flags.argyropee.malusGlobal", mode: 2, value: "-2" }
@@ -354,6 +354,61 @@ Hooks.once("init", async() => {
   ];
   await loadTemplates(templatePaths);
   console.log("Argyropée | Système prêt !");
+});
+
+/* ========================================== */
+/* MENU PERSONNALISÉ POUR L'ÉDITEUR DE TEXTE  */
+/* ========================================== */
+Hooks.on("getProseMirrorMenuDropDowns", (menu, config) => {
+    if ("format" in config) {
+        
+        const wrapIn = foundry.prosemirror.commands.wrapIn;
+        const setBlockType = foundry.prosemirror.commands.setBlockType;
+        const divNode = menu.schema.nodes.div;
+        const pNode = menu.schema.nodes.paragraph;
+
+        // Fonction utilitaire améliorée (accepte un type de noeud spécifique)
+        const createArgyropéeStyle = (actionName, title, className, targetNode = divNode) => {
+            return {
+                action: actionName,
+                title: title,
+                active: (state) => {
+                    const { $from } = state.selection;
+                    for (let i = $from.depth; i > 0; i--) {
+                        const node = $from.node(i);
+                        if (node.type === targetNode) {
+                            const classes = node.attrs?._preserve?.class || "";
+                            if (classes.includes(className)) return true;
+                        }
+                    }
+                    return false;
+                },
+                cmd: () => {
+                    // Si on cible un paragraphe (ex: dans un tableau), on change son type au lieu de l'envelopper
+                    const command = (targetNode === pNode) ? setBlockType : wrapIn;
+                    
+                    menu._toggleBlock(targetNode, command, {
+                        attrs: { _preserve: { class: className } }
+                    });
+                    return true;
+                }
+            };
+        };
+
+        // Injection de nos boutons dans le menu
+        config.format.entries.push({
+            action: "argyropee-styles",
+            title: "Argyropée", 
+            children: [
+                createArgyropéeStyle("argyropee-intro", "Introduction", "introduction"),
+                createArgyropéeStyle("argyropee-exemple", "Exemple", "exemple"),
+                createArgyropéeStyle("argyropee-recit", "Récit", "recit"),
+                createArgyropéeStyle("argyropee-sous-titre", "Sous-titre", "sous-titre"),
+                createArgyropéeStyle("argyropee-image-droite", "Image à droite", "image-droite-60"),
+                createArgyropéeStyle("argyropee-image-gauche", "Image à gauche", "image-gauche-60")
+            ]
+        });
+    }
 });
 
 Hooks.on("renderChatLog", (app, html, data) => {

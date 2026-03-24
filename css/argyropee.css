@@ -1060,83 +1060,21 @@ li.chat-message.message.flexcol {
 }
 
 /* ========================================== */
-/* STYLE DU JOURNAL          */
+/* PERSONNALISATION DE L'ÉCRAN DE PAUSE       */
 /* ========================================== */
 
-.sheet.journal-entry .journal-entry-page :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
-	margin-top: 0;
+/* On remplace l'icône de rouage par l'image de ton choix */
+#pause img {
+    content: url("./assets/styles/argyropee_asset_pause.webp"); /* Ex: "assets/logo-pause.webp" */
+    
+    /* Optionnel : on force la taille pour éviter que ton image ne prenne tout l'écran */
+    width: 100px; 
+    height: 100px;
 }
 
-.sheet.journal-entry .journal-entry-content {
-	background: url("./assets/styles/argyropee-styles-fondpage.webp") repeat;
-	background-position: center top;
-	background-size: cover;
-}
-
-.sheet.journal-entry .journal-page-content {
-	margin-left: 4em;
-	margin-right: 3.5em;
-}
-.custom-system-actor-content {
-	background: url("./assets/styles/argyropee-styles-fondpage.webp") repeat;
-	background-position: center top;
-	background-size: cover;
-	font-family: 'BellMT';
-}
-
-.custom-system-actor .profile-img-container {
-	border: 20px solid transparent; 
-    border-image: url('./assets/styles/argyropee-styles-border-portrait.webp') 30 stretch; 
-    box-sizing: border-box;
-}
-
-.custom-system-actor-content .sheet-header {
-	margin-left: 50px;
-	margin-right: 50px;
-}
-
-.custom-system-actor-content .custom-system-customBody {
-	margin-left: 50px;
-	margin-right: 50px;
-}
-
-.custom-system-actor-content .sheet-header h1.charname {
-	margin-bottom: 20px;
-}
-
-.custom-system-actor-content .sheet-header h1 input {
-	border:0;
-	background:0;
-	text-align: center;
-	font-family: 'Renaiss';
-	font-size:2em;
-}
-
-.custom-system-component-contents h3 {
-	font-family: 'Renaiss';
-	font-weight:600;
-	font-size: 1.5em;
-	margin-bottom: 1em;
-	border:none;
-}
-
-.custom-system-component-contents table tr {
-	height: 3em;
-}
-
-.fiche_titre {
-	font-family: 'Renaiss';
-	font-weight: 600;
-	font-size: 1.5em;
-	padding-top: 1em;
-}
-
-.custom-system-actor nav.sheet-tabs {
-	font-weight: 600;
-	font-size: 1.2em;
-	font-family: 'Renaiss';
-	margin-bottom: 1em;
-}
+/* ========================================== */
+/* HEADER DE JOURNAL                          */
+/* ========================================== */
 
 .journal-sheet .journal-header .title {
 	background: rgba(0, 0, 0, 0);
@@ -1151,17 +1089,92 @@ li.chat-message.message.flexcol {
     padding-bottom: 15px;
 }
 
+.journal-sheet .journal-header {
+    margin-right: 35px;
+    margin-left: 35px;
+}
+
+.theme-dark .journal-sheet .journal-header .title {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================== */
+/* ÉDITEUR DE JOURNAL (PROSEMIRROR)           */
+/* ========================================== */
+
+/* Cible la zone de saisie du journal */
+.journal-sheet .editor-content,
+.journal-sheet .ProseMirror {
+    color: #000000 !important; /* Force le texte en noir */
+    background-color: #e9e9e4; /* Un fond beige/papier très doux pour les yeux */
+    padding: 15px; 
+    border-radius: 5px; /* Arrondit légèrement les angles */
+}
+
+.theme-dark .journal-sheet .editor-content,
+.theme-dark .journal-sheet .ProseMirror {
+    background-color: #1a1a1a !important; /* Fond gris très foncé */
+    border: 1px solid #333333; /* Une petite bordure discrète */
+}
+
+.theme-dark .journal-sheet .ProseMirror h1,
+.theme-dark .journal-sheet .ProseMirror h2,
+.theme-dark .journal-sheet .ProseMirror h3 {
+    color: #d4a373 !important; /* Un or/cuivre clair pour les titres en mode sombre */
+}
+.theme-dark .journal-sheet .ProseMirror p {
+    color: #e0e0e0 !important; /* Texte gris clair/blanc */
+}
+/* ========================================== */
+/* STYLE DU JOURNAL          */
+/* ========================================== */
+
+.sheet.journal-entry .journal-entry-pages {
+    margin: 0px 28px 0px 28px;
+}
+
+.sheet.journal-entry .journal-entry-page :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
+	margin-top: 0;
+}
+
+.sheet.journal-entry .journal-entry-content {
+	background: url("./assets/styles/argyropee-styles-fondpageB.webp") repeat;
+	background-position: center top;
+	background-size: cover;
+}
+
+/*.theme-dark .sheet.journal-entry .journal-entry-content {
+    background: url("./assets/styles/argyropee-styles-fondpageB-dark.webp") repeat;
+    background-position: center top;
+    background-size: cover;
+}
+*/
+.sheet.journal-entry .journal-page-content {
+	margin-left: 4em;
+	margin-right: 3.5em;
+}
+
+.journal-entry-page p {
+    font-size: 1.15em;
+    line-height: 1.2em;
+    text-indent: 1em;
+    text-align: justify;
+    font-family: "LinR";
+	font-size: 1.15em;
+    color: black
+}
+
 .journal-entry-page h1 {
 	position: relative;
     font-family: "Renaiss";
-    font-size: 4em;
+    font-size: 3em;
     color: black;
     border-bottom: 0;
-    padding-bottom: 40px;
+    padding-bottom: 50px;
     margin-left: 60px;
-    padding-left: 30px;
+    padding-left: 40px;
     margin-right: 48px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     margin-top: 10px;
 	font-variant-caps: small-caps;
 }
@@ -1188,26 +1201,7 @@ li.chat-message.message.flexcol {
     background-size: auto 100%; /* La droite s'étire horizontalement */
 }
 
-.argyropee {
-	font-family: "LinR";
-	font-size: 1.15em;
-}
-
-.argyropee .image-droite-60 {
-	float:right;
-	max-width: 60%;
-	margin: 10px 0px 5px 15px;
-	border: double 5px #192a51;
-}
-
-.argyropee .image-gauche-60 {
-	float:left;
-	max-width: 60%;
-	margin: 10px 0px 5px 15px;
-	border: double 5px #192a51;
-}
-
-.argyropee h2 {
+.journal-entry-page h2 {
 	position: relative;
 	font-size: 1.5em;
 	font-family: 'LinB';
@@ -1217,8 +1211,7 @@ li.chat-message.message.flexcol {
 	padding-top: 0.3em;
 	border:0;
 }
-
-.argyropee h2::before {
+.journal-entry-page h2::before {
     content: "";
     position: absolute;
     bottom: 0;
@@ -1226,10 +1219,10 @@ li.chat-message.message.flexcol {
     height: 35px; /* Ajustez selon la hauteur de l'image gauche */
     width: 35px; /* Ajustez selon la largeur de l'image gauche */
     background: url('./assets/styles/argyropee_styles_h3_border-left.png') no-repeat left center;
-	background-size: auto 100%;
+    background-size: auto 100%;
 }
 
-.argyropee h2::after {
+.journal-entry-page h2::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -1240,49 +1233,103 @@ li.chat-message.message.flexcol {
     background-size: auto 100%; /* La droite s'étire horizontalement */
 }
 
-.argyropee h3 {
-	font-family: 'LinB';
-	font-size: 1.2em;
-	border: 0;
-	color: #4a0000 ;
-}
-
-.argyropee p {
-	font-size: 1.05em;
-	line-height: 1.2em;
-	text-indent: 1em;
-	text-align: justify;
-}
-
-.argyropee blockquote {
-	margin-left: 25px;
+.journal-entry-page h3 {
+    font-family: 'LinB';
+    font-size: 1.2em;
     border: 0;
-    margin-top: -50px;
-    font-family: 'High';
-    font-size: 1.15em;
+    color: #4a0000;
 }
 
-.argyropee table p {
+.journal-entry-page .content-link {
+    border: none;
+    background: none;
+    font-weight: 600;
+    color: darkred;
+}
+
+.journal-entry-page .content-link:hover {
+    color: red;
+    text-decoration: underline;
+}
+
+.journal-entry-page .image-droite-60 {
+	float:right;
+	max-width: 60%;
+	margin: 10px 0px 5px 15px;
+	border: double 5px #192a51;
+}
+
+.journal-entry-page .image-gauche-60 {
+	float:left;
+	max-width: 60%;
+	margin: 10px 0px 5px 15px;
+	border: double 5px #192a51;
+}
+
+.journal-entry-page table {
+    margin-bottom: 1em;
+    margin-left: 0px;
+}
+
+.journal-entry-page table p {
 	text-indent: unset;
     text-align: unset;
     margin-left: 0.1em;
 }
 
-.argyropee table th {
-	text-align: unset;
+/* ========================================== */
+/* EN-TÊTES DE TABLEAUX                       */
+/* ========================================== */
+
+.journal-entry-page table thead tr,
+.journal-entry-page table th {
+    background-color: #000000 !important; /* Force le fond noir sur la ligne ET les cases */
+    color: wheat !important; /* Force la couleur du texte */
+    text-align: center; /* (Optionnel) C'est souvent plus joli centré */
+    padding-left: 0.5em;
+    padding-right: 0.5em;
 }
 
-.argyropee table th p {
-	margin-left: 0.5em;
-	margin-right: 0.5em;
+/* Force la couleur même si le texte est dans un paragraphe ou en gras */
+.journal-entry-page table th p,
+.journal-entry-page table th strong {
+    color: wheat !important; 
+    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
-.argyropee li p {
+.journal-entry-page table td {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+    color: black;
+}
+
+.journal-entry-page table tr:nth-child(even) {
+	background-color: rgb(205, 211, 221);
+}
+
+.journal-entry-page table tr:nth-child(odd) {
+	background-color: rgb(248, 249, 243);
+}
+
+.journal-entry-page ul {
+    color: black;
+}
+
+.journal-entry-page li p {
 	text-align: unset;
 	text-indent: unset;	
 }
 
-.argyropee .introduction h1 {
+.sous-titre {
+	margin-left: 25px;
+    border: 0;
+    margin-top: -35px;
+    font-family: 'High';
+    font-size: 1.15em;
+}
+
+.introduction h1 {
 	font-family: "LinB";
     border: 0;
     text-align: center;
@@ -1300,7 +1347,7 @@ li.chat-message.message.flexcol {
     content: none;
 }
 
-.argyropee .introduction h2 {
+.introduction h2 {
 	position: relative;
 	border: 0;
 	font-size: 2.5em;
@@ -1309,7 +1356,7 @@ li.chat-message.message.flexcol {
 	margin-bottom: 1em;
 }
 
-.argyropee .introduction h2::before {
+.introduction h2::before {
     content: "";
     position: absolute;
     top: 55%; /* Place l'image au milieu de la hauteur du titre */
@@ -1321,7 +1368,7 @@ li.chat-message.message.flexcol {
     background-size: auto 100%; /* Assure que l'image se redimensionne en hauteur */
 }
 
-.argyropee .introduction h2::after {
+.introduction h2::after {
     content: "";
     position: absolute;
     top: 55%; /* Place l'image au milieu de la hauteur du titre */
@@ -1333,7 +1380,7 @@ li.chat-message.message.flexcol {
     background-size: auto 100%; /* La droite s'étire horizontalement */
 }
 
-.argyropee .introduction h3 {
+.introduction h3 {
 	position: relative;
 	font-size: 1.5em;
 	font-family: 'LinB';
@@ -1344,7 +1391,7 @@ li.chat-message.message.flexcol {
 	margin-bottom: 1em;
 }
 
-.argyropee .introduction h3::before {
+.introduction h3::before {
     content: "";
     position: absolute;
     bottom: 0;
@@ -1355,7 +1402,7 @@ li.chat-message.message.flexcol {
 	background-size: auto 100%;
 }
 
-.argyropee .introduction h3::after {
+.introduction h3::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -1366,7 +1413,7 @@ li.chat-message.message.flexcol {
     background-size: auto 100%; /* La droite s'étire horizontalement */
 }
 
-.argyropee .recit {
+.recit {
 	background-color: #E6EFE9;
     font-family: "Fineprint";
     border: solid 2px #192a51;
@@ -1377,10 +1424,13 @@ li.chat-message.message.flexcol {
 
 .exemple {
 	background-color: rgba(0, 0, 0, 0.658);
-    color: white;
-    padding: 2em;
-    margin: 1em 5em 1em 5em;
-	border: double 4px;
+    padding: 1em;
+    margin: 1em 3em;
+	border: double 4px white;
+}
+
+.exemple p {
+    color: rgb(229, 229, 229);
 }
 
 .exemple h4 {
@@ -1388,6 +1438,12 @@ li.chat-message.message.flexcol {
 	font-family: "Renaiss";
 	font-weight: 600;
 	text-align: center;
+    color: rgb(229, 229, 229);
+}
+
+.exemple ul {
+    color: rgb(229, 229, 229);
+    text-align: justify;
 }
 
 a.content-link {
@@ -1395,552 +1451,3 @@ a.content-link {
 	background: none;
 	font-weight: 600;
 }
-
-.argyropee table td {
-	padding-left: 0.5em;
-	padding-right: 0.5em;
-}
-
-.argyropee table th {
-	padding-left: 0.5em;
-	padding-right: 0.5em;
-}
-/*
-.journal-entry-page h1::first-letter {
-	color:rgb(0, 0, 0);
-}
-
-.journal-entry-page h2 {
-    font-family: "Headline";
-    font-size: 40px;
-    color: #8d8d8d;
-	border: none;
-}
-
-.journal-entry-page h3 {
-    font-family: "Headline";
-    font-size: 30px;
-    color: #1C3738;
-	border: none;
-}
-
-.journal-entry-page h4 {
-    font-family: "Headline";
-    font-size: 20px;
-    color: #09340D;
-	border: none;
-}
-
-.editor.prosemirror.editing-source textarea {
-	color:rgb(0, 0, 0);
-}
-
-.cthack-gilou {
-	margin: 5px;
-}
-
-.cthack-gilou a.content-link,
-a.inline-roll {
-  background: transparent;
-  border: 0px;
-  padding: 0px;
-  
-  font-weight: bold;
-  text-indent: 0;
-}
-
-.cthack-gilou p {
-    font-family: "EBGaramond";
-	font-size: 18px;
-	color:black;
-	margin:0;
-	text-indent: 2em;
-	text-align: justify;
-}
-
-.cthack-gilou li p {
-	text-indent: 0;
-}
-
-.cthack-gilou table {
-	width:90%;
-	border-collapse: collapse;
-	border: 2px solid rgb(88, 80, 70);
-	margin: auto;
-}
-
-.cthack-gilou table tr {
-	border: 2px solid rgb(88, 80, 70)
-}
-
-.cthack-gilou table td {
-	border: 2px solid rgb(88, 80, 70)
-}
-
-.cthack-gilou table th{
-	background-color: rgb(88, 80, 70);
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
-
-.cthack-gilou table th p {
-	font-family: "Headline";
-	color: rgb(255, 255, 255);
-	letter-spacing: 0.15em;
-	padding-left: 1em;
-	padding-right: 1em;
-	text-indent: 0;
-}
-
-.cthack-gilou table td p {
-	padding-left: 1em;
-	padding-right: 1em;
-	color: rgb(0, 0, 0);
-	text-indent: 0;
-}
-
-.cthack-gilou table tr:nth-child(even) {
-	background-color: #edecec;
-}
-
-.cthack-gilou table tr:nth-child(odd) {
-	background-color: #d9d4d0;
-}
-
-.cthack-gilou .presentation {
-	background-color: #D9D4D0;
-	width: 90%;
-	margin: 20px auto 20px auto;
-	padding: 20px;
-}
-
-.cthack-gilou .presentation h1 {
-	font-family: "Headline";
-	font-size: 60px;
-	text-align: center;
-	border: 0;
-	color: rgb(88, 80, 70);
-	margin: 0;
-	padding: 0;
-}
-
-.cthack-gilou .presentation h2 {
-	font-family: "Headline";
-	font-size: 40px;
-	text-align: center;
-	color: rgb(88, 80, 70);
-	margin: 0;
-	padding: 0;
-}
-
-.cthack-gilou .presentation h3 {
-	font-family: "Headline";
-	font-size: 20px;
-	color: rgb(88, 80, 70);
-	text-align: center;
-	margin: 0;
-	padding: 0;
-}
-
-.cthack-gilou .presentation h4 {
-	font-family: "Headline";
-	font-size: 20px;
-	color: #09340D;
-	text-align: center;
-}
-
-.cthack-gilou .encart {
-	background: #D9D4D0;
-	border: 3px double rgb(88, 80, 70);
-	border-radius: 30px;
-	margin: 30px 20px 30px 20px;
-	padding: 20px 30px 20px 30px;
-}
-
-.cthack-gilou .keeper {
-	background: #22201f;
-	border: 3px double rgb(255, 255, 255);
-	border-radius: 30px;
-	margin: 30px 20px 30px 20px;
-	padding: 20px 30px 20px 30px;
-}
-
- .cthack-gilou .keeper p {
-	text-indent: 0;
-	color: #ffffff;
-	font-style: italic;
-}
-
-.cthack-gilou .location {
-	background: #bbc4cb;
-	border: 3px double	#00233a;
-	border-color: rgb(158, 192, 84);
-	border-radius: 30px;
-	margin: 20px 30px 20px 30px;
-	padding: 20px 30px 20px 30px;
-}
-
-.cthack-gilou .location img {
-	border: 10px solid #D9D4D0;
-	margin: 0px 50px 10px 50px;
-	max-width: 80%;
-}
-
-.cthack-gilou .location p {
-	text-indent: 0;
-	text-align: center;
-}
-
-.cthack-gilou .image-droite-60 {
-	float:right;
-	max-width: 60%;
-	margin: 10px 0px 5px 15px;
-	border: none;
-}
-
-.cthack-gilou figure img {
-	border: 10px solid #D9D4D0;
-}
-
-.cthack-gilou .stats {
-	background: #edecec;
-	border-top: 2px solid #585046;
-	border-bottom: 2px solid #585046;
-	border-color: rgb(158, 192, 84);
-	border-radius: 30px;
-	margin: 30px 20px 30px 20px;
-	padding: 20px 30px 20px 30px;
-}
-
-
-.cthack-gilou ul {
-	list-style-type: square;
-	font-family: "LinLibertine";
-	font-size: 1em;
-	text-align: justify;
-}
-
-.cthack-gilou ol {
-	font-family: "LinLibertine";
-	font-size: 1em;
-	text-align: justify;
-}
-
-.cthack-gilou h1 {
-    margin: 10px 0 10px 0;
-	padding: 0 0 10px 0;
-	background: url("./assets/illus/coc-cthulhu_illu-fondpage03.webp") repeat;
-	background-position: center top;
-	font-family: "Bookmania";
-    font-size: 40px;
-	font-variant-caps: small-caps;
-	color: rgb(255, 255, 255);
-    height: auto;
-    line-height: normal;
-    border: 2px solid;
-	border-color: rgb(45, 151, 59);
-	text-align: center;
-}
-
-.cthack-gilou h2 {
-    font-family: "RoyalVogue";
-    font-size: 1.5em;
-    color: rgb(11, 84, 111);
-    border-bottom: 1.5px solid rgb(11, 84, 111);
-}
-
-.cthack-gilou h3 {
-    font-family: "RoyalVogue";
-    font-size: 1em;
-    color: rgb(11, 84, 111);
-}
-
-.cthack-gilou h4 {
-	font-family: "LinLibertineBold";
-	font-size: 1em;
-	color: rgb(11, 84, 111);
-}
-
-.cthack-gilou .sous-titre p {
-	font-family: "Bookmania";
-	font-size: 20px;
-	font-variant-caps: small-caps;
-	text-align: center;
-	color: rgb(135, 135, 134);
-}
-
-.cthack-gilou img {
-	border: 0;
-}
-
-.cthack-gilou .encart {
-	background: rgb(248, 249, 243);
-	border: 2px solid;
-	border-color: rgb(158, 192, 84);
-	border-radius: 30px;
-	margin: 30px 20px 30px 20px;
-	padding: 20px 30px 20px 30px;
-}
-
-.cthack-gilou .credits {
-	background: rgb(255, 255, 255);
-	color: rgb(11, 84, 111);
-	border: 2px solid;
-	border-color: rgb(11, 84, 111);
-	border-radius: 30px;
-	margin: 30px auto 30px auto;
-	padding: 20px 30px 20px 30px;
-	width: 90%;
-}
-
-.cthack-gilou .credits h3 {
-	font-family: "CaviarBold";
-	font-size: 1.2em;
-	text-align: center;
-	color: rgb(11, 84, 111);
-}
-
-.cthack-gilou .credits p {
-	font-family: "CaviarDreams";
-	font-size: 1.1em;
-	text-align: center;
-	color: rgb(11, 84, 111);
-}
-
-.cthack-gilou .presentation {
-	background: url("./assets/illus/coc-cthulhu_illu-fondpage03.webp") repeat;
-	background-position: center top;
-	color: rgb(255, 255, 255);
-	width: 80%;
-	margin: 20px auto 20px auto;
-	padding: 20px;
-}
-
-.cthack-gilou .presentation h3 {
-	font-family: "LinLibertineBold";
-	font-size: 1.2em;
-	font-style: bold;
-	color: rgb(255, 255, 255);
-}
-
-.cthack-gilou .presentation .warning {
-	color:red;
-	text-align: center;
-}
-
-.cthack-gilou .presentation img {
-    max-height: 15px;
-	margin-left: 1px;
-	margin-right: 1px;
-}
-
-.cthack-gilou .presentation table {
-	width: 75%;
-	border-collapse: collapse;
-	border: 0;
-	margin-right: 50%;
-	line-height: 0.5em;
-}
-
-.cthack-gilou .presentation table td p {
-	font-family: "LinLibertine";
-	padding-left: 0;
-	color: rgb(255, 255, 255);
-}
-
-.cthack-gilou .presentation table tr:nth-child(even) {
-	background-color: rgba(255, 255, 255, 0);
-}
-
-.cthack-gilou .presentation table tr:nth-child(odd) {
-	background-color: rgba(255, 255, 255, 0);
-}
-
-.cthack-gilou .img-float-left {
-	max-width: 50%;
-	padding-right: 10px;
-	padding-left: 10px;
-	margin-right: 20px;
-	break-inside: avoid;
-	font-style: normal;
-	float: left;
-	text-align: left;
-	border: 0;
-}
-
-.cthack-gilou .img-float-right {
-	max-width: 50%;
-	padding-right: 10px;
-	padding-left: 10px;
-	margin-left: 20px;
-	break-inside: avoid;
-	font-style: normal;
-	float: right;
-	text-align: right;
-	border: 0;
-}
-
-.cthack-gilou .img-float-left-little {
-	max-width: 40%;
-	padding-right: 10px;
-	padding-left: 10px;
-	margin-right: 20px;
-	margin-bottom: 2em;
-	break-inside: avoid;
-	font-style: normal;
-	float: left;
-	text-align: left;
-	border: 0;
-}
-
-.cthack-gilou .img-float-right-little {
-	max-width: 40%;
-	padding-right: 10px;
-	padding-left: 10px;
-	margin-left: 20px;
-	margin-bottom: 2em;
-	break-inside: avoid;
-	font-style: normal;
-	float: right;
-	text-align: right;
-	border: 0;
-}
-
-.cthack-gilou .capacite p {
-	font-family: "CaviarDreams";
-	font-size: 1em;
-	color: rgb(11, 84, 111);
-	text-align: 0;
-	margin-right: 0;
-}
-
-.cthack-gilou .bestiaire {
-	background: rgb(246, 248, 240);
-	border: 0;
-	margin: 1em 12.5% 1em 12.5%;
-	width: 75%;
-	padding-bottom: 20px;
-	display:inline-block;
-}
-
-.cthack-gilou .bestiaire h4 {
-	font-family: "LinLibertineBold";
-	font-size: 1em;
-	color:white;
-	font-variant-caps: small-caps;
-	background: rgb(158, 192, 84);
-	line-height: 2em;
-	text-align: center;
-	border: 0;
-}
-
-.cthack-gilou .bestiaire p {
-	font-family: "CaviarDreams";
-	font-size: 1em;
-	color: rgb(11, 84, 111);
-	text-align: 0;
-	margin-right: 2em;
-	margin-left: 2em;
-}
-
-.cthack-gilou .sidebar {
-	border-top: 2px solid rgb(11, 84, 111);
-	border-bottom: 2px solid rgb(11, 84, 111);
-	background: rgb(248, 249, 243);
-	margin: 15px 20px 15px 20px;
-	padding: 10px 10px 10px 10px;
-}
-
-.cthack-gilou .sidebar p {
-	font-family: "CaviarDreams";
-	font-size: 1em;
-	color: rgb(11, 84, 111);
-	text-align: justify;
-	margin-right: 0;
-}
-
-.cthack-gilou .sidebar ul {
-	font-family: "CaviarDreams";
-	font-size: 1em;
-	color: rgb(11, 84, 111);
-	text-align: justify;
-	list-style-position: outside;
-}
-
-.cthack-gilou .sidebar h3 {
-	font-family: "CaviarBold";
-	font-size: 1.1em;
-}
-
-.cthack-gilou .encart-exemple {
-	background: rgb(11, 84, 111);
-	border: 0;
-	border-color: rgb(11, 84, 111);
-	border-radius: 30px;
-	margin: 10px 20px 10px 20px;
-	padding: 15px 15px 15px 15px;
-}
-
-.cthack-gilou .encart-exemple p {
-	color: rgb(248, 249, 243);
-	font-style: italic;
-	letter-spacing: 0.025em;
-}
-
-.cthack-gilou .intro-grise {
-	color: rgb(135, 135, 134);
-	margin: 20px 50px 20px 50px;
-	padding: 10px 20px 10px 20px;
-	text-align: center;
-	border: 2px solid rgb(135, 135, 134);
-	background-color: rgb(248, 249, 243);
-}
-
-.cthack-gilou .intro-grise h2 {
-	font-size: 1.1em;
-	border: 0;
-	margin: 0;
-}
-
-.cthack-gilou .description {
-	background: rgb(246, 248, 240);
-	border-top: 2px solid;
-	border-bottom: 2px solid;
-	border-color: rgb(158, 192, 84);
-	margin: 1em 20px 1em 20px;
-	padding: 0 20px 0 20px;
-}
-
-.cthack-gilou .description p {
-	color: rgb(159, 193, 87);
-	font-family: "CaviarDreams";
-	font-style: italic;
-}
-
-.cthack-gilou table {
-	width:90%;
-	border-collapse: collapse;
-	border: 0;
-	margin: auto;
-}
-
-.cthack-gilou table th p {
-	font-family: "CaviarBold";
-	padding-left: 1em;
-	color: rgb(11, 84, 111);
-}
-
-.cthack-gilou table td p {
-	font-family: "CaviarDreams";
-	padding-left: 1em;
-	color: rgb(11, 84, 111);
-}
-
-.cthack-gilou table tr:nth-child(even) {
-	background-color: rgb(205, 211, 221);
-}
-
-.cthack-gilou table tr:nth-child(odd) {
-	background-color: rgb(248, 249, 243);
-}
-*/
