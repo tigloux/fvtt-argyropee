@@ -2,7 +2,7 @@
   "id": "argyropee",
   "title": "Argyropée",
   "description": "Système pour le jeu de rôle Argyropée.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "compatibility": {
     "minimum": "11",
     "verified": "13"
