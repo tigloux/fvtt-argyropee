@@ -173,6 +173,7 @@ export async function rollSkill(actor, skillKey) {
     let reussiteLabel = "", cssClass = "";
     if (total >= 15) { reussiteLabel = "RÉUSSITE CRITIQUE !"; cssClass = "crit-success"; }
     else if (total >= 10) { reussiteLabel = "RÉUSSITE"; cssClass = "success"; }
+    else if (total >= 8) { reussiteLabel = "RÉUSSITE PARTIELLE"; cssClass = "success"; }
     else if (total <= 0) { reussiteLabel = "ÉCHEC CRITIQUE"; cssClass = "crit-fail"; }
     else { reussiteLabel = "ÉCHEC"; cssClass = "fail"; }
     
@@ -542,6 +543,9 @@ export async function rollAttack(actor, weapon) {
               <button type="button" class="action-btn" data-action="rollDamage" data-formula="${finalDamage}" data-weapon="${weapon.name} (+ Manœuvre)"><i class="fas fa-fist-raised"></i> Dégâts + Manœuvre</button>
           </div>`;
     } else if (total >= 10) {
+        reussiteLabel = "L'ATTAQUE TOUCHE !"; cssClass = "success";
+        degatsHtml = `<button type="button" class="damage-btn" data-action="rollDamage" data-formula="${finalDamage}" data-weapon="${weapon.name}"><i class="fas fa-tint"></i> Lancer les dégâts (${finalDamage})</button>`;
+    } else if (total >= 8) {
         reussiteLabel = "L'ATTAQUE TOUCHE !"; cssClass = "success";
         degatsHtml = `<button type="button" class="damage-btn" data-action="rollDamage" data-formula="${finalDamage}" data-weapon="${weapon.name}"><i class="fas fa-tint"></i> Lancer les dégâts (${finalDamage})</button>`;
     } else if (total <= 0) { reussiteLabel = "ÉCHEC CRITIQUE"; cssClass = "crit-fail"; } 
