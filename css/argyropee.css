@@ -1095,7 +1095,8 @@ li.chat-message.message.flexcol {
 }
 
 .theme-dark .journal-sheet .journal-header .title {
-    background: rgba(255, 255, 255, 0.5);
+    /*background: rgba(255, 255, 255, 0.5);*/
+    color: #d4a373;
 }
 
 /* ========================================== */
@@ -1143,12 +1144,12 @@ li.chat-message.message.flexcol {
 	background-size: cover;
 }
 
-/*.theme-dark .sheet.journal-entry .journal-entry-content {
-    background: url("./assets/styles/argyropee-styles-fondpageB-dark.webp") repeat;
+.theme-dark .sheet.journal-entry .journal-entry-content {
+    background: url("./assets/styles/argyropee_asset_fond-journal_darkB.webp") repeat;
     background-position: center top;
     background-size: cover;
 }
-*/
+
 .sheet.journal-entry .journal-page-content {
 	margin-left: 4em;
 	margin-right: 3.5em;
@@ -1162,6 +1163,9 @@ li.chat-message.message.flexcol {
     font-family: "LinR";
 	font-size: 1.15em;
     color: black
+}
+.theme-dark .journal-entry-page p {
+    color: #e0e0e0;
 }
 
 .journal-entry-page h1 {
@@ -1178,7 +1182,9 @@ li.chat-message.message.flexcol {
     margin-top: 10px;
 	font-variant-caps: small-caps;
 }
-
+.theme-dark .journal-entry-page h1 {
+    color: white;
+}
 .journal-entry-page h1::before {
     content: "";
     position: absolute;
@@ -1188,6 +1194,11 @@ li.chat-message.message.flexcol {
     width: 70px; /* Ajustez selon la largeur de l'image gauche */
     background: url('./assets/styles/argyropee_styles_h1_border-right.webp') no-repeat left center;
 	background-size: auto 100%;
+}
+
+.theme-dark .journal-entry-page h1::before {
+    background: url('./assets/styles/argyropee_styles_h1_border-right-dark.webp') no-repeat left center;
+    background-size: auto 100%;
 }
 
 .journal-entry-page h1::after {
@@ -1201,6 +1212,11 @@ li.chat-message.message.flexcol {
     background-size: auto 100%; /* La droite s'étire horizontalement */
 }
 
+.theme-dark .journal-entry-page h1::after {
+    background: url('./assets/styles/argyropee_styles_h1_border-left-dark.webp') repeat-x;
+    background-size: auto 100%;
+}
+
 .journal-entry-page h2 {
 	position: relative;
 	font-size: 1.5em;
@@ -1211,6 +1227,11 @@ li.chat-message.message.flexcol {
 	padding-top: 0.3em;
 	border:0;
 }
+
+.theme-dark .journal-entry-page h2 {
+    color: white;
+}
+
 .journal-entry-page h2::before {
     content: "";
     position: absolute;
@@ -1219,6 +1240,11 @@ li.chat-message.message.flexcol {
     height: 35px; /* Ajustez selon la hauteur de l'image gauche */
     width: 35px; /* Ajustez selon la largeur de l'image gauche */
     background: url('./assets/styles/argyropee_styles_h3_border-left.png') no-repeat left center;
+    background-size: auto 100%;
+}
+
+.theme-dark .journal-entry-page h2::before {
+    background: url('./assets/styles/argyropee_styles_h3_border-left-dark.webp') no-repeat left center;
     background-size: auto 100%;
 }
 
@@ -1232,12 +1258,20 @@ li.chat-message.message.flexcol {
     background: url('./assets/styles/argyropee_styles_h3_border-right.png') repeat-x;
     background-size: auto 100%; /* La droite s'étire horizontalement */
 }
+.theme-dark .journal-entry-page h2::after {
+    background: url('./assets/styles/argyropee_styles_h3_border-right-dark.webp') repeat-x;
+    background-size: auto 100%;
+}
 
 .journal-entry-page h3 {
     font-family: 'LinB';
     font-size: 1.2em;
     border: 0;
     color: #4a0000;
+}
+
+.theme-dark .journal-entry-page h3 {
+    color: #d4a373;
 }
 
 .journal-entry-page .content-link {
@@ -1290,6 +1324,12 @@ li.chat-message.message.flexcol {
     padding-right: 0.5em;
 }
 
+.theme-dark .journal-entry-page table thead tr,
+.theme-dark .journal-entry-page table th {
+    background-color: #333333 !important; /* Un noir plus doux pour le thème sombre */
+    color: #d4a373 !important; /* Un or/cuivre clair pour les titres en mode sombre */
+}
+
 /* Force la couleur même si le texte est dans un paragraphe ou en gras */
 .journal-entry-page table th p,
 .journal-entry-page table th strong {
@@ -1304,16 +1344,24 @@ li.chat-message.message.flexcol {
     color: black;
 }
 
+.theme-dark  .journal-entry-page table td {
+    color: #e0e0e0;
+}
+
 .journal-entry-page table tr:nth-child(even) {
-	background-color: rgb(205, 211, 221);
+	background-color: rgb(205, 211, 221, 0.25);
 }
 
 .journal-entry-page table tr:nth-child(odd) {
-	background-color: rgb(248, 249, 243);
+	background-color: rgba(248, 249, 243, 0.25);
 }
 
 .journal-entry-page ul {
     color: black;
+}
+
+.theme-dark .journal-entry-page ul {
+    color: #e0e0e0;
 }
 
 .journal-entry-page li p {
@@ -1329,7 +1377,7 @@ li.chat-message.message.flexcol {
     font-size: 1.15em;
 }
 
-.introduction h1 {
+.journal-entry-page .introduction h1 {
 	font-family: "LinB";
     border: 0;
     text-align: center;
@@ -1339,15 +1387,19 @@ li.chat-message.message.flexcol {
 	padding-left: 0;
 }
 
-.introduction h1::before {
+.theme-dark .journal-entry-page .introduction h1 {
+    color: white;
+}
+
+.journal-entry-page .introduction h1::before {
     content: none;
 }
 
-.introduction h1::after {
+.journal-entry-page .introduction h1::after {
     content: none;
 }
 
-.introduction h2 {
+.journal-entry-page .introduction h2 {
 	position: relative;
 	border: 0;
 	font-size: 2.5em;
@@ -1356,11 +1408,15 @@ li.chat-message.message.flexcol {
 	margin-bottom: 1em;
 }
 
-.introduction h2::before {
+.theme-dark .journal-entry-page .introduction h2 {
+    color: white;
+}
+
+.journal-entry-page .introduction h2::before {
     content: "";
     position: absolute;
-    top: 55%; /* Place l'image au milieu de la hauteur du titre */
-    left: 15px;
+    top: 50%; /* Place l'image au milieu de la hauteur du titre */
+    left: 20px;
     transform: translateY(-50%); /* Centre verticalement l'image */
     height: 25px; /* Ajustez selon la hauteur souhaitée */
     width: 50px; /* Garde les proportions de l'image */
@@ -1368,11 +1424,16 @@ li.chat-message.message.flexcol {
     background-size: auto 100%; /* Assure que l'image se redimensionne en hauteur */
 }
 
-.introduction h2::after {
+.theme-dark .journal-entry-page .introduction h2::before {
+    background: url('./assets/styles/argyropee_styles_h2_border-left-dark.webp') no-repeat left center;
+    background-size: auto 100%;
+}
+
+.journal-entry-page .introduction h2::after {
     content: "";
     position: absolute;
-    top: 55%; /* Place l'image au milieu de la hauteur du titre */
-    left: 50px; /* Cette valeur doit correspondre à la largeur de l'image gauche si nécessaire */
+    top: 50%; /* Place l'image au milieu de la hauteur du titre */
+    left: 45px; /* Cette valeur doit correspondre à la largeur de l'image gauche si nécessaire */
     right: 15px;
     transform: translateY(-50%); /* Centre verticalement l'image */
     height: 25px; /* Ajustez selon la hauteur souhaitée de l'image droite */
@@ -1380,7 +1441,12 @@ li.chat-message.message.flexcol {
     background-size: auto 100%; /* La droite s'étire horizontalement */
 }
 
-.introduction h3 {
+.theme-dark .journal-entry-page .introduction h2::after {
+    background: url('./assets/styles/argyropee_styles_h2_border-right-dark.webp') no-repeat right center;
+    background-size: auto 100%;
+}
+
+.journal-entry-page .introduction h3 {
 	position: relative;
 	font-size: 1.5em;
 	font-family: 'LinB';
@@ -1391,7 +1457,11 @@ li.chat-message.message.flexcol {
 	margin-bottom: 1em;
 }
 
-.introduction h3::before {
+.theme-dark .journal-entry-page .introduction h3 {
+    color: white;
+}
+
+.journal-entry-page .introduction h3::before {
     content: "";
     position: absolute;
     bottom: 0;
@@ -1402,7 +1472,12 @@ li.chat-message.message.flexcol {
 	background-size: auto 100%;
 }
 
-.introduction h3::after {
+.theme-dark .journal-entry-page .introduction h3::before {
+    background: url('./assets/styles/argyropee_styles_h3_border-left-dark.webp') no-repeat left center;
+    background-size: auto 100%;
+}
+
+.journal-entry-page .introduction h3::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -1412,8 +1487,16 @@ li.chat-message.message.flexcol {
     background: url('./assets/styles/argyropee_styles_h3_border-right.png') repeat-x;
     background-size: auto 100%; /* La droite s'étire horizontalement */
 }
+.theme-dark .journal-entry-page .introduction h3::after {
+    background: url('./assets/styles/argyropee_styles_h3_border-right-dark.webp') repeat-x;
+    background-size: auto 100%;
+}
 
-.recit {
+.journal-entry-page .introduction img {
+    margin: 0px 0px 20px 0px;
+}
+
+.journal-entry-page .recit {
 	background-color: #E6EFE9;
     font-family: "Fineprint";
     border: solid 2px #192a51;
@@ -1422,6 +1505,11 @@ li.chat-message.message.flexcol {
     font-size: 1.1em;
 }
 
+.journal-entry-page .recit p {
+    text-align: justify;
+    text-indent: 0;
+    color: #000;
+}
 .exemple {
 	background-color: rgba(0, 0, 0, 0.658);
     padding: 1em;

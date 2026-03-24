@@ -332,12 +332,7 @@ function getPnjSkillSchema() {
     const fields = foundry.data.fields;
     const skills = {};
     const skillKeys = [
-        "acrobatie", "agilite", "artificerie", "bagout", "combat_distance", "combat_rapproche", 
-        "conduite", "detection", "empathie_animale", "endurance_morale", "endurance_physique", 
-        "escalade", "faux_et_usage", "furtivite", "herboristerie", "intimidation", "medecine", 
-        "navigation", "negociation", "persuasion", "pratique_nautique", "psychologie", "rixe", 
-        "savoir_academique", "savoir_criminel", "savoir_esoterique", "savoir_technologique", 
-        "sens_artistique", "sens_magique", "serrurerie", "survie", "urbanisme"
+        "agilite", "alchimie", "art", "artificerie", "artisanat", "bagout", "charisme", "combat_distance", "combat_rapproche", "commerce", "conduite", "deduction", "detection", "empathie_animale", "endurance_morale", "endurance_physique", "escalade", "faux_usage_faux", "fouille", "furtivite", "herboristerie", "medecine", "piegeage", "pratique_nautique", "rixe", "sciences_naturelles", "sciences_religieuses", "sciences_sociales", "sciences_techniques", "sens_magique", "serrurerie", "urbanisme"
     ];
     // Pour chaque compétence, on crée un simple Booléen (Case à cocher)
     skillKeys.forEach(key => { skills[key] = new fields.BooleanField({ initial: false }); });
@@ -349,7 +344,14 @@ export class ArgyropeeNPCData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      biographie: new fields.SchemaField({ notes: new fields.HTMLField({ initial: "" }) }),
+      background: new fields.SchemaField({
+        physique: new fields.HTMLField({ initial: "" }),
+        amours: new fields.HTMLField({ initial: "" }),
+        ennemis: new fields.HTMLField({ initial: "" }),
+        famille: new fields.HTMLField({ initial: "" }),
+        amis: new fields.HTMLField({ initial: "" }),
+        travail: new fields.HTMLField({ initial: "" })
+      }),
       health: new fields.SchemaField({
         value: new fields.NumberField({ initial: 10, min: 0 }),
         max: new fields.NumberField({ initial: 10, min: 0 })

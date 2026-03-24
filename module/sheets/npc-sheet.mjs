@@ -32,6 +32,16 @@ export default class NPCSheet extends ArgyropeeActorSheet {
     };
     context.tab = { id: activeTab };
 
+    const bg = this.document.system.background || {};
+    
+    // On transforme le code HTML brut en HTML "enrichi" lisible par Foundry
+    context.enrichedPhysique = await TextEditor.enrichHTML(bg.physique || "", { async: true });
+    context.enrichedAmours   = await TextEditor.enrichHTML(bg.amours || "", { async: true });
+    context.enrichedEnnemis  = await TextEditor.enrichHTML(bg.ennemis || "", { async: true });
+    context.enrichedFamille  = await TextEditor.enrichHTML(bg.famille || "", { async: true });
+    context.enrichedAmis     = await TextEditor.enrichHTML(bg.amis || "", { async: true });
+    context.enrichedTravail  = await TextEditor.enrichHTML(bg.travail || "", { async: true });
+    
     return context;
   }
 }
