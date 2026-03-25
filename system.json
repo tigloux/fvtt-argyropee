@@ -2,7 +2,7 @@
   "id": "argyropee",
   "title": "Argyropée",
   "description": "Système pour le jeu de rôle Argyropée.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "compatibility": {
     "minimum": "11",
     "verified": "13"
@@ -68,13 +68,6 @@
       "system": "argyropee"
     },
     {
-      "name": "corebook",
-      "label": "Core Book (Journal)",
-      "path": "packs/core-book",
-      "type": "JournalEntry",
-      "system": "argyropee"
-    },
-    {
       "name": "npc",
       "label": "Archétypes et Monstres",
       "path": "packs/npc",
@@ -87,6 +80,13 @@
       "path": "packs/manuels",
       "type": "JournalEntry",
       "system": "argyropee"
+    },
+    {
+    "name": "macros-argyropee",
+    "label": "Macros Argyropée",
+    "path": "packs/macros-argyropee",
+    "type": "Macro",
+    "system": "argyropee"
     }
   ],
   "socket": true,

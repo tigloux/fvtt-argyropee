@@ -169,6 +169,80 @@ export class ArgyropeeActorData extends foundry.abstract.TypeDataModel {
   }
 }
 
+/**
+ * Fonction utilitaire générant le schéma des compétences pour PNJs/Monstres.
+ * DEV : Contrairement aux PJs qui ont des scores, les PNJ ont de simples cases à cocher (Booléens)
+ * pour signifier s'ils sont "Privilégiés" ou non dans une compétence.
+ * @returns {Object} Schéma de champs booléens.
+ */
+function getPnjSkillSchema() {
+    const fields = foundry.data.fields;
+    const skills = {};
+    const skillKeys = [
+        "agilite", "alchimie", "art", "artificerie", "artisanat", "bagout", "charisme", "combat_distance", "combat_rapproche", "commerce", "conduite", "deduction", "detection", "empathie_animale", "endurance_morale", "endurance_physique", "escalade", "faux_usage_faux", "fouille", "furtivite", "herboristerie", "medecine", "piegeage", "pratique_nautique", "rixe", "sciences_naturelles", "sciences_religieuses", "sciences_sociales", "sciences_techniques", "sens_magique", "serrurerie", "urbanisme"
+    ];
+    // Pour chaque compétence, on crée un simple Booléen (Case à cocher)
+    skillKeys.forEach(key => { skills[key] = new fields.BooleanField({ initial: false }); });
+    return skills;
+}
+
+// --- Personnage Non-Joueur (Humain) ---
+export class ArgyropeeNPCData extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    const fields = foundry.data.fields;
+    return {
+      background: new fields.SchemaField({
+        physique: new fields.HTMLField({ initial: "" }),
+        amours: new fields.HTMLField({ initial: "" }),
+        ennemis: new fields.HTMLField({ initial: "" }),
+        famille: new fields.HTMLField({ initial: "" }),
+        amis: new fields.HTMLField({ initial: "" }),
+        travail: new fields.HTMLField({ initial: "" })
+      }),
+      health: new fields.SchemaField({
+        value: new fields.NumberField({ initial: 10, min: 0 }),
+        max: new fields.NumberField({ initial: 10, min: 0 })
+      }),
+      panache: new fields.SchemaField({
+        value: new fields.NumberField({ initial: 3, min: 0 }),
+        max: new fields.NumberField({ initial: 3, min: 0 })
+      }),
+      initiativeBonus: new fields.NumberField({ initial: 0 }),
+      skills: new fields.SchemaField(getPnjSkillSchema()),
+      special: new fields.SchemaField({
+        melancolie: new fields.BooleanField({ initial: false }),
+        chatimentVermeil: new fields.BooleanField({ initial: false })
+      }),
+      biographie: new fields.SchemaField({ notes: new fields.HTMLField({ initial: "" }) }),
+    };
+  }
+}
+
+// --- Monstre / Créature / Animal ---
+export class ArgyropeeMonsterData extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    const fields = foundry.data.fields;
+    return {
+      biographie: new fields.SchemaField({ notes: new fields.HTMLField({ initial: "" }) }),
+      health: new fields.SchemaField({
+        value: new fields.NumberField({ initial: 15, min: 0 }),
+        max: new fields.NumberField({ initial: 15, min: 0 })
+      }),
+      protection: new fields.NumberField({ initial: 0, min: 0 }), // Uniquement X
+      initiativeBonus: new fields.NumberField({ initial: 2 }),
+      skills: new fields.SchemaField(getPnjSkillSchema()),
+      movement: new fields.SchemaField({
+        sol: new fields.NumberField({ initial: 1.0, min: 0 }),
+        vol: new fields.NumberField({ initial: 0, min: 0 }),
+        nage: new fields.NumberField({ initial: 0, min: 0 })
+      }),
+      environment: new fields.StringField({ initial: "" }),
+      weaknesses: new fields.StringField({ initial: "" }),
+      isSwarm: new fields.BooleanField({ initial: false })
+    };
+  }
+}
+
 // ==========================================
 // MODÈLES DE DONNÉES DES OBJETS (ITEMS)
 // ==========================================
@@ -318,79 +392,6 @@ export class DiseaseData extends foundry.abstract.TypeDataModel {
       testsPassed: new fields.NumberField({ initial: 0, min: 0, integer: true }),
       remedyRequired: new fields.BooleanField({ initial: false }),
       treatment: new fields.StringField({ initial: "" }) // Description du remède
-    };
-  }
-}
-
-/**
- * Fonction utilitaire générant le schéma des compétences pour PNJs/Monstres.
- * DEV : Contrairement aux PJs qui ont des scores, les PNJ ont de simples cases à cocher (Booléens)
- * pour signifier s'ils sont "Privilégiés" ou non dans une compétence.
- * @returns {Object} Schéma de champs booléens.
- */
-function getPnjSkillSchema() {
-    const fields = foundry.data.fields;
-    const skills = {};
-    const skillKeys = [
-        "agilite", "alchimie", "art", "artificerie", "artisanat", "bagout", "charisme", "combat_distance", "combat_rapproche", "commerce", "conduite", "deduction", "detection", "empathie_animale", "endurance_morale", "endurance_physique", "escalade", "faux_usage_faux", "fouille", "furtivite", "herboristerie", "medecine", "piegeage", "pratique_nautique", "rixe", "sciences_naturelles", "sciences_religieuses", "sciences_sociales", "sciences_techniques", "sens_magique", "serrurerie", "urbanisme"
-    ];
-    // Pour chaque compétence, on crée un simple Booléen (Case à cocher)
-    skillKeys.forEach(key => { skills[key] = new fields.BooleanField({ initial: false }); });
-    return skills;
-}
-
-// --- Personnage Non-Joueur (Humain) ---
-export class ArgyropeeNPCData extends foundry.abstract.TypeDataModel {
-  static defineSchema() {
-    const fields = foundry.data.fields;
-    return {
-      background: new fields.SchemaField({
-        physique: new fields.HTMLField({ initial: "" }),
-        amours: new fields.HTMLField({ initial: "" }),
-        ennemis: new fields.HTMLField({ initial: "" }),
-        famille: new fields.HTMLField({ initial: "" }),
-        amis: new fields.HTMLField({ initial: "" }),
-        travail: new fields.HTMLField({ initial: "" })
-      }),
-      health: new fields.SchemaField({
-        value: new fields.NumberField({ initial: 10, min: 0 }),
-        max: new fields.NumberField({ initial: 10, min: 0 })
-      }),
-      panache: new fields.SchemaField({
-        value: new fields.NumberField({ initial: 3, min: 0 }),
-        max: new fields.NumberField({ initial: 3, min: 0 })
-      }),
-      initiativeBonus: new fields.NumberField({ initial: 0 }),
-      skills: new fields.SchemaField(getPnjSkillSchema()),
-      special: new fields.SchemaField({
-        melancolie: new fields.BooleanField({ initial: false }),
-        chatimentVermeil: new fields.BooleanField({ initial: false })
-      })
-    };
-  }
-}
-
-// --- Monstre / Créature / Animal ---
-export class ArgyropeeMonsterData extends foundry.abstract.TypeDataModel {
-  static defineSchema() {
-    const fields = foundry.data.fields;
-    return {
-      biographie: new fields.SchemaField({ notes: new fields.HTMLField({ initial: "" }) }),
-      health: new fields.SchemaField({
-        value: new fields.NumberField({ initial: 15, min: 0 }),
-        max: new fields.NumberField({ initial: 15, min: 0 })
-      }),
-      protection: new fields.NumberField({ initial: 0, min: 0 }), // Uniquement X
-      initiativeBonus: new fields.NumberField({ initial: 2 }),
-      skills: new fields.SchemaField(getPnjSkillSchema()),
-      movement: new fields.SchemaField({
-        sol: new fields.NumberField({ initial: 1.0, min: 0 }),
-        vol: new fields.NumberField({ initial: 0, min: 0 }),
-        nage: new fields.NumberField({ initial: 0, min: 0 })
-      }),
-      environment: new fields.StringField({ initial: "" }),
-      weaknesses: new fields.StringField({ initial: "" }),
-      isSwarm: new fields.BooleanField({ initial: false })
     };
   }
 }

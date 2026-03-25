@@ -26,7 +26,7 @@ export default class NPCSheet extends ArgyropeeActorSheet {
         tabs: [
           { id: "skills", label: "Compétences", cssClass: activeTab === "skills" ? "active" : "" },
           { id: "combat", label: "Combat", cssClass: activeTab === "combat" ? "active" : "" },
-          { id: "background", label: "Biographie", cssClass: activeTab === "background" ? "active" : "" }
+          { id: "background", label: "Biographie", cssClass: activeTab === "background" ? "active" : "" },
         ]
       }
     };
@@ -41,6 +41,9 @@ export default class NPCSheet extends ArgyropeeActorSheet {
     context.enrichedFamille  = await TextEditor.enrichHTML(bg.famille || "", { async: true });
     context.enrichedAmis     = await TextEditor.enrichHTML(bg.amis || "", { async: true });
     context.enrichedTravail  = await TextEditor.enrichHTML(bg.travail || "", { async: true });
+
+    const notes = this.document.system.biographie?.notes || "";
+    context.enrichedNotes = await TextEditor.enrichHTML(notes, { async: true });
     
     return context;
   }

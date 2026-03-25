@@ -32,6 +32,9 @@ export default class MonsterSheet extends ArgyropeeActorSheet {
     };
     context.tab = { id: activeTab };
 
+    const notes = this.document.system.biographie?.notes || "";
+    context.enrichedNotes = await TextEditor.enrichHTML(notes, { async: true });
+    
     return context;
   }
 }

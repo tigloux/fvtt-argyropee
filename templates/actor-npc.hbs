@@ -62,6 +62,47 @@
         {{!-- ONGLET COMBAT --}}
         <div class="tab tab-content-col  {{#if (eq tab.id 'combat')}}active{{/if}}" data-tab="combat" data-group="primary">
             <div class="grid-2col">
+                <fieldset class="sheet-box red">
+                        <legend class="sheet-legend" style="color: darkred;"><i class="fas fa-user-injured"></i> États Préjudiciables</legend>
+                        <p style="font-size: 0.85em; font-style: italic; color: #555; margin-top: 0; margin-bottom: 10px;">Altérations physiques et morales générales (Fatigue, Hémorragie...).</p>
+                        <ul class="items-list">
+                            {{#each systemEffects as |effect|}}
+                            <li class="effect-card" data-effect-id="{{effect.id}}">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="{{effect.img}}" width="28" height="28" style="border: none;"/>
+                                    <b style="color: darkred; font-size: 1.1em;">{{effect.name}}</b>
+                                </div>
+                                <a data-action="deleteEffect" title="Retirer l'état" style="cursor: pointer; color: #555; font-size: 1.2em;"><i class="fas fa-times-circle"></i></a>
+                            </li>
+                            {{else}}
+                            <li style="text-align: center; color: #777; font-style: italic; padding: 10px; border: 1px dashed #ccc; background: white;">
+                                Aucun état préjudiciable actif.
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </fieldset>
+
+                    <fieldset class="sheet-box green">
+                        <legend class="sheet-legend"><i class="fas fa-magic"></i> Effets d'Objets & Sorts</legend>
+                        <p style="font-size: 0.85em; font-style: italic; color: #555; margin-top: 0; margin-bottom: 10px;">Bénédictions, malédictions ou poisons actifs.</p>
+                        <ul class="items-list">
+                            {{#each itemEffects as |effect|}}
+                            <li class="effect-card" data-effect-id="{{effect.id}}">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="{{effect.img}}" width="28" height="28" style="border: none;"/>
+                                    <b style="color: #004a2e; font-size: 1.1em;">{{effect.name}}</b>
+                                </div>
+                                <a data-action="deleteEffect" title="Retirer l'effet" style="cursor: pointer; color: #555; font-size: 1.2em;"><i class="fas fa-times-circle"></i></a>
+                            </li>
+                            {{else}}
+                            <li style="text-align: center; color: #777; font-style: italic; padding: 10px; border: 1px dashed #ccc; background: white;">
+                                Aucun effet d'objet actif.
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </fieldset>
+            </div>
+            <div class="grid-2col">
                 {{!-- COLONNE GAUCHE --}}
                 <div class="tab-content-col" style="gap: 0;">
                     <fieldset class="sheet-box red">
@@ -279,6 +320,14 @@
                             </prose-mirror>
                         </div>
                     </div>
+                </div>
+            </fieldset>
+            <fieldset class="sheet-box gray" style="border-color: #000;">
+                <legend class="sheet-legend"><i class="fas fa-book-open"></i> Notes</legend>
+                <div>
+                    <prose-mirror name="system.biographie.notes" value="{{system.biographie.notes}}" toggled="true">
+                        {{{enrichedNotes}}}
+                    </prose-mirror>
                 </div>
             </fieldset>
         </div>
