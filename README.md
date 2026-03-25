@@ -22,4 +22,6 @@ Le système est livré prêt à jouer avec des compendiums pour tout ce qui est 
 * Système développé par : **Tigilou**
 * Univers original "Argyropée" par : **Frédéric Marin**
 
-*Argyropée est une marque déposée. Ce système est développé dans le respect de la propriété intellectuelle de l'œuvre originale.*
+**Propriété Intellectuelle :** Le nom *Argyropée*, son univers, ses mécaniques et les textes descriptifs inclus dans ce système sont la propriété exclusive de [Nom de l'auteur]. Tous droits réservés. Intégré avec l'aimable autorisation de l'auteur.
+**Code Source :** Le code informatique de ce système (JS, HTML, CSS) est distribué sous Licence MIT. 
+Veuillez consulter le fichier `LICENSE` pour plus de détails.
