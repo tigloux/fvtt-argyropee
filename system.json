@@ -8,7 +8,7 @@
     "verified": "13"
   },
   "authors": [
-    { "name": "Tigilou" }
+    { "name": "Tigilou (Système) & Frédéric Marin (Tout le reste)" }
   ],
   "esmodules": ["module/argyropee.mjs"],
   "styles": ["css/argyropee.css"],
