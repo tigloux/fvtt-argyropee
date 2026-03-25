@@ -61,7 +61,14 @@ export default class WeaponSheet extends ArgyropeeItemSheet {
         "combat_rapproche": CONFIG.ARGYROPEE.competences["combat_rapproche"],
         "combat_distance": CONFIG.ARGYROPEE.competences["combat_distance"]
     };
-
+    // Préparation du type de munitions
+    context.ammoCategories = {
+        "Flèches": "Flèches (Arcs)",
+        "Carreaux": "Carreaux (Arbalètes)",
+        "Poudre": "Poudre & Balles (Armes à feu)",
+        "Jet": "Jet (Frondes, Sarbacanes)"
+    };
+    
     context.enrichedDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
         this.document.system.description || "", { async: true, relativeTo: this.document }
     );

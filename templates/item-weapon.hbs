@@ -59,7 +59,9 @@
                 {{#if system.consumeAmmo}}
                 <div class="form-group" style="margin-top: 10px;">
                     <label>Type de munition requis :</label>
-                    <input type="text" name="system.ammoType" value="{{system.ammoType}}" placeholder="ex: Flèches, Balles en plomb...">
+                    <select name="system.ammoType">
+                        {{selectOptions ammoCategories selected=system.ammoType localize=false}}
+                    </select>
                 </div>
                 {{/if}}
             </fieldset>

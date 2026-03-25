@@ -391,7 +391,8 @@ export async function rollAttack(actor, weapon) {
     // MOTEUR GÉNÉRIQUE DE BONUS D'ATTAQUE
     // ==========================================
     // ARCHITECTURE : Lit dynamiquement tous les drapeaux d'effets magiques du lanceur
-    // pour appliquer des buffs d'attaque/dégâts selon le type d'arme.let bonusMagiqueAttaque = 0;
+    // pour appliquer des buffs d'attaque/dégâts selon le type d'arme.
+    let bonusMagiqueAttaque = 0;
     let bonusMagiqueDegats = 0;
     let desMagiquesDegats = "";
     let texteMagie = "";
