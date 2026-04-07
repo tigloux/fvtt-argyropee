@@ -35,6 +35,7 @@ import {
   ArgyropeeMonsterData,
   ArgyropeeNPCData
 } from "./data-models.mjs";
+import { rollSkill, rollAttack, castSpell, consumeItem, deployTrap, rest, escapeGrapple, rollInitiative } from "./helpers/dice.mjs";
 
 // ==========================================
 // HELPERS & CONSTANTES
@@ -347,6 +348,10 @@ Hooks.once("init", async() => {
   CONFIG.specialStatusEffects.DEFEATED = "mort";
   CONFIG.specialStatusEffects.BLIND = "aveugle";
   
+  game.argyropee = {
+    rollSkill, rollAttack, castSpell, consumeItem, deployTrap, rest, escapeGrapple, rollInitiative
+  };
+
   // Préchargement des Partials Handlebars
   const templatePaths = [
     "systems/argyropee/templates/actor-nav.hbs"

@@ -28,6 +28,11 @@
 	src: url("./assets/fonts/Cinzel-VariableFont_wght.ttf");
 }
 
+@font-face {
+	font-family: "Cursive";
+	src: url("./assets/fonts/Cursive.ttf");
+}
+
 /* ========================================== */
 /* STYLE GLOBAL DE LA FENÊTRE ACTEUR         */
 /* ========================================== */
@@ -1373,8 +1378,12 @@ li.chat-message.message.flexcol {
 	margin-left: 25px;
     border: 0;
     margin-top: -35px;
-    font-family: 'High';
-    font-size: 1.15em;
+}
+
+.sous-titre p {
+    font-family: 'Fineprint';
+    font-size: 1.5em;
+    font-style: italic;
 }
 
 .journal-entry-page .introduction h1 {
@@ -1498,18 +1507,19 @@ li.chat-message.message.flexcol {
 
 .journal-entry-page .recit {
 	background-color: #E6EFE9;
-    font-family: "Fineprint";
     border: solid 2px #192a51;
     margin: 2em 2em 2em 2em;
     padding: 1em 2em;
-    font-size: 1.1em;
 }
 
 .journal-entry-page .recit p {
     text-align: justify;
     text-indent: 0;
     color: #000;
+    font-family: "Cursive";
+    font-size: 1.5em;
 }
+
 .exemple {
 	background-color: rgba(0, 0, 0, 0.658);
     padding: 1em;
