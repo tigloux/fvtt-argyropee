@@ -2,10 +2,10 @@
   "id": "argyropee",
   "title": "Argyropée",
   "description": "Système pour le jeu de rôle Argyropée.",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "compatibility": {
-    "minimum": "11",
-    "verified": "13"
+    "minimum": "13",
+    "verified": "14"
   },
   "authors": [
     { "name": "Tigilou (Système) & Frédéric Marin (Tout le reste)" }
