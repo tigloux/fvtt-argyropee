@@ -336,6 +336,8 @@ export default class ArgyropeeActorSheet extends foundry.applications.api.Handle
     context.enrichedAmis = await TextEditor.enrichHTML(bg.amis || "", { async: true });
     context.enrichedEnnemis = await TextEditor.enrichHTML(bg.ennemis || "", { async: true });
     context.enrichedTravail = await TextEditor.enrichHTML(bg.travail || "", { async: true });
+    context.enrichedVrac = await TextEditor.enrichHTML(bg.vrac || "", { async: true });
+    context.enrichedNotes = await TextEditor.enrichHTML(bg.notes || "", { async: true });
 
     // --- LISTE DES EFFETS ACTIFS SÉPARÉS ---
     context.systemEffects = [];

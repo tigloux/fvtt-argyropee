@@ -37,7 +37,9 @@ export class ArgyropeeActorData extends foundry.abstract.TypeDataModel {
         amours: new fields.HTMLField({ initial: "" }),
         amis: new fields.HTMLField({ initial: "" }),
         ennemis: new fields.HTMLField({ initial: "" }),
-        travail: new fields.HTMLField({ initial: "" })
+        travail: new fields.HTMLField({ initial: "" }),
+        vrac: new fields.HTMLField({ initial: "" }), // Pour tout ce qui ne rentre pas dans les autres catégories
+        notes: new fields.HTMLField({ initial: "" }) // Notes libres pour le MJ (non affichées aux joueurs)
       }),
 
       // Panache (Règle spécifique )

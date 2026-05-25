@@ -304,6 +304,14 @@
                 </div>
             </fieldset>
         </div>
+
+        {{!-- NOUVEAU BLOC : VRAC ET NOTES LIBRES --}}
+        <fieldset class="sheet-box gray" style="margin-top: 15px;">
+            <legend class="sheet-legend"><i class="fas fa-scroll"></i> Vrac & Bric-à-brac</legend>
+            <prose-mirror name="system.background.vrac" value="{{system.background.vrac}}" toggled="true">
+                {{{enrichedVrac}}}
+            </prose-mirror>
+        </fieldset>
     </div>
 
     {{!-- ONGLET 5 : BACKGROUND --}}
@@ -431,6 +439,13 @@
                         </prose-mirror>
                     </div>
                 </div>
+            </div>
+            {{!-- NOUVEAU BLOC : NOTES ET HISTOIRE DU PERSONNAGE --}}
+            <div style="margin-top: 20px; border-top: 1px dashed #4a0064; padding-top: 15px;">
+                <b style="color: #4a0064; display: block; margin-bottom: 5px;"><i class="fas fa-feather-alt"></i> Notes Personnelles & Chroniques</b>
+                <prose-mirror name="system.background.notes" value="{{system.background.notes}}" toggled="true">
+                    {{{enrichedNotes}}}
+                </prose-mirror>
             </div>
         </fieldset>
 
